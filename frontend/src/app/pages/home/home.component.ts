@@ -1,12 +1,12 @@
 import { Component, ViewChild, ElementRef, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { CommonModule } from '@angular/common';
-import { HeroSectionComponent } from '../../components/pages/homeComponents/hero-section/hero-section.component';
-import { PricingSectionComponent } from '../../components/pages/homeComponents/pricing-section/pricing-section.component';
-import { ProcessSectionComponent } from '../../components/pages/homeComponents/process-section/process-section.component';
-import { TestimonialsSectionComponent } from '../../components/pages/homeComponents/testimonials-section/testimonials-section.component';
-import { WhyChooseUsSectionComponent } from '../../components/pages/homeComponents/why-choose-us-section/why-choose-us-section.component';
-import { CallToActionSectionComponent } from '../../components/pages/homeComponents/call-to-action-section/call-to-action-section.component';
+import { HeroSectionComponent } from './components/hero-section/hero-section.component';
+import { PricingSectionComponent } from './components/pricing-section/pricing-section.component';
+import { ProcessSectionComponent } from './components/process-section/process-section.component';
+import { TestimonialsSectionComponent } from './components/testimonials-section/testimonials-section.component';
+import { WhyChooseUsSectionComponent } from './components/why-choose-us-section/why-choose-us-section.component';
+import { CallToActionSectionComponent } from './components/call-to-action-section/call-to-action-section.component';
 
 @Component({
   selector: 'app-home',
