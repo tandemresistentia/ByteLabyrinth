@@ -1,0 +1,30 @@
+<div class="pricing-section">
+    <div class="container">
+      <h2 class="section-title">Pricing Plans</h2>
+      <p class="section-subtitle">Choose the perfect plan for your web development needs</p>
+      <div class="pricing-grid">
+        <div *ngFor="let service of services" class="pricing-card" [class.popular]="service.popular">
+          <div *ngIf="service.popular" class="popular-tag">Most Popular</div>
+          <div class="card-content">
+            <div class="card-subcontent">
+                <div class="icon-wrapper">
+                <mat-icon [fontIcon]="service.icon"></mat-icon>
+                </div>
+                <h3 class="service-name">{{service.name}}</h3>
+                <p class="service-description">{{service.description}}</p>
+                <h4 class="service-price" [class.accent]="service.popular">{{service.price}}</h4>
+                <ul class="feature-list">
+                <li *ngFor="let feature of service.features">
+                    <mat-icon fontIcon="check"></mat-icon>
+                    <span>{{feature}}</span>
+                </li>
+                </ul>
+            </div>
+            <button mat-raised-button color="primary" (click)="handleServiceSelect(service.id)">
+              Get Started
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

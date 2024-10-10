@@ -1,0 +1,17 @@
+<section class="process-section" id="development-process">
+  <div class="container">
+    <h2 class="section-title">Our Development Process</h2>
+    <p class="section-subtitle">From concept to launch, we ensure a smooth journey for your project</p>
+    
+    <div class="process-grid" [@staggerAnimation]="processSteps.length">
+      <mat-card *ngFor="let item of processSteps; let i = index" class="process-card">
+        <mat-card-content>
+          <div class="step-number">{{ i + 1 }}</div>
+          <mat-icon class="step-icon">{{ item.icon }}</mat-icon>
+          <h3 class="step-title">{{ item.step }}</h3>
+          <p class="step-description">{{ item.description }}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</section>

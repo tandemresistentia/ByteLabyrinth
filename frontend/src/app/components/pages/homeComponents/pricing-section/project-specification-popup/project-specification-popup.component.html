@@ -1,0 +1,115 @@
+<!-- project-specification-popup.component.html -->
+<mat-dialog-container *ngIf="open">
+    <h2 mat-dialog-title>Project Specification</h2>
+    <mat-dialog-content>
+      <mat-horizontal-stepper [linear]="true" #stepper>
+        <mat-step [stepControl]="formGroup.get('name')!">
+          <ng-template matStepLabel>Basic Information</ng-template>
+          <form [formGroup]="formGroup">
+            <mat-form-field>
+              <mat-label>Name</mat-label>
+              <input matInput formControlName="name" required>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Email</mat-label>
+              <input matInput formControlName="email" required>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Company (if applicable)</mat-label>
+              <input matInput formControlName="company">
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Preferred Contact Method</mat-label>
+              <mat-select formControlName="contactMethod">
+                <mat-option value="email">Email</mat-option>
+                <mat-option value="phone">Phone</mat-option>
+                <mat-option value="video">Video Call</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Project Timeline</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="projectTimeline">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </form>
+        </mat-step>
+  
+        <mat-step [stepControl]="formGroup.get('websitePurpose')!">
+          <ng-template matStepLabel>Project Details</ng-template>
+          <form [formGroup]="formGroup">
+            <mat-form-field>
+              <mat-label>Website Purpose</mat-label>
+              <mat-select formControlName="websitePurpose">
+                <mat-option value="portfolio">Portfolio</mat-option>
+                <mat-option value="business">Business</mat-option>
+                <mat-option value="ecommerce">E-commerce</mat-option>
+                <mat-option value="blog">Blog</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Target Audience</mat-label>
+              <input matInput formControlName="targetAudience">
+            </mat-form-field>
+            <div formGroupName="desiredFeatures">
+              <mat-checkbox formControlName="responsiveDesign">Responsive Design</mat-checkbox>
+              <mat-checkbox formControlName="contactForm">Contact Form</mat-checkbox>
+              <mat-checkbox formControlName="seoOptimization">SEO Optimization</mat-checkbox>
+            </div>
+            <mat-form-field>
+              <mat-label>Design Preferences</mat-label>
+              <textarea matInput formControlName="designPreferences" rows="4"></textarea>
+            </mat-form-field>
+          </form>
+        </mat-step>
+  
+        <mat-step [stepControl]="formGroup.get('contentProvision')!">
+          <ng-template matStepLabel>Content Information</ng-template>
+          <form [formGroup]="formGroup">
+            <mat-form-field>
+              <mat-label>Content Provision</mat-label>
+              <mat-select formControlName="contentProvision">
+                <mat-option value="clientProvided">Client Provided</mat-option>
+                <mat-option value="needCreation">Need Content Creation</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Sitemap or Page Structure Ideas</mat-label>
+              <textarea matInput formControlName="sitemapIdeas" rows="4"></textarea>
+            </mat-form-field>
+          </form>
+        </mat-step>
+  
+        <mat-step [stepControl]="formGroup.get('hostingPreferences')!">
+          <ng-template matStepLabel>Technical Requirements</ng-template>
+          <form [formGroup]="formGroup">
+            <mat-form-field>
+              <mat-label>Hosting Preferences</mat-label>
+              <input matInput formControlName="hostingPreferences">
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Domain Name (if you have one)</mat-label>
+              <input matInput formControlName="domainName">
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Integration Needs</mat-label>
+              <textarea matInput formControlName="integrationNeeds" rows="4"></textarea>
+            </mat-form-field>
+          </form>
+        </mat-step>
+  
+        <mat-step>
+          <ng-template matStepLabel>Budget Confirmation</ng-template>
+          <h3>Selected Package: {{selectedService?.name}}</h3>
+          <h4>Base Price: {{selectedService?.price}}</h4>
+          <p>Additional features may affect the final price. We'll provide a detailed quote after reviewing your requirements.</p>
+        </mat-step>
+      </mat-horizontal-stepper>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+      <button mat-button (click)="onCancel()">Cancel</button>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button matStepperNext>Next</button>
+      <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!formGroup.valid">Submit</button>
+    </mat-dialog-actions>
+  </mat-dialog-container>

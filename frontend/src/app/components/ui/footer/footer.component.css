@@ -1,0 +1,88 @@
+.footer {
+    padding: 48px 0;
+    background-color: #F5EBE0;
+    color: var(--primary-color);
+    box-shadow: 8 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 16px;
+  }
+  
+  .grid-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  
+  .grid-item {
+    flex: 1;
+    min-width: 200px;
+    margin-bottom: 24px;
+  }
+  
+  .company-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  
+  .company-description {
+    opacity: 0.7;
+  }
+  
+  .social-links {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .social-links button {
+    margin: 0 8px;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .social-links button:hover {
+    transform: translateY(-5px);
+    color: var(--accent-color);
+  }
+  
+  .footer-links {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .footer-links a {
+    margin: 0 8px;
+    color: inherit;
+    text-decoration: none;
+  }
+  
+  .footer-links a:hover {
+    color: var(--accent-color);
+  }
+  
+  .copyright {
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 1px solid var(--primary-light-color);
+    text-align: center;
+  }
+  
+  .copyright p {
+    opacity: 0.7;
+  }
+  
+  @media (max-width: 768px) {
+    .grid-container {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  
+    .footer-links {
+      justify-content: center;
+    }
+  }

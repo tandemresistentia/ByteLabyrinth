@@ -1,0 +1,20 @@
+<section class="testimonials-section" id="testimonials">
+  <div class="container">
+    <h2 class="section-title">What Our Clients Say</h2>
+    <p class="section-subtitle">Don't just take our word for it - hear from our satisfied clients</p>
+    
+    <div class="testimonials-grid" [@staggerAnimation]="testimonials.length">
+      <mat-card *ngFor="let testimonial of testimonials" class="testimonial-card">
+        <mat-card-content>
+          <div class="avatar">{{ testimonial.name[0] }}</div>
+          <mat-icon class="quote-icon">format_quote</mat-icon>
+          <p class="testimonial-text">"{{ testimonial.text }}"</p>
+          <div class="testimonial-author">
+            <h3>{{ testimonial.name }}</h3>
+            <p>{{ testimonial.company }}</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</section>

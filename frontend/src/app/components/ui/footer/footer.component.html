@@ -1,0 +1,23 @@
+<footer class="footer">
+  <div class="container">
+    <div class="grid-container">
+      <div class="grid-item">
+        <h2 class="company-name">ByteLabyrinth</h2>
+        <p class="company-description">Crafting digital experiences that leave a lasting impression.</p>
+      </div>
+      <div class="grid-item social-links">
+        <button mat-icon-button *ngFor="let link of socialLinks" [attr.aria-label]="link.icon" (click)="openLink(link.url)">
+          <mat-icon>{{link.icon}}</mat-icon>
+        </button>
+      </div>
+      <div class="grid-item footer-links">
+        <a routerLink="/services">Services</a>
+        <a routerLink="/about">About</a>
+        <a routerLink="/contact">Contact</a>
+      </div>
+    </div>
+    <div class="copyright">
+      <p>© {{currentYear}} ByteLabyrinth. All rights reserved.</p>
+    </div>
+  </div>
+</footer>

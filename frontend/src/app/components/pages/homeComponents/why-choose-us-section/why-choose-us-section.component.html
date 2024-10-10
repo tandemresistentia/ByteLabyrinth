@@ -1,0 +1,24 @@
+<section class="why-choose-us-section" id="why-choose-us">
+  <div class="container">
+    <h2 class="section-title">Why Choose Us</h2>
+    <p class="section-subtitle">Discover the advantages of partnering with our expert team</p>
+    
+    <div class="content-wrapper">
+      <div class="reasons-list" [@staggerAnimation]="reasons.length">
+        <div *ngFor="let item of reasons" class="reason-card">
+          <div class="icon-wrapper">
+            <mat-icon>{{ item.icon }}</mat-icon>
+          </div>
+          <div class="text-wrapper">
+            <h3 class="reason-title">{{ item.text }}</h3>
+            <p class="reason-description">{{ item.description }}</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="chart-wrapper">
+        <app-interactive-chart></app-interactive-chart>
+      </div>
+    </div>
+  </div>
+</section>

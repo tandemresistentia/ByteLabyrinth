@@ -1,0 +1,109 @@
+@use '@angular/material' as mat;
+@include mat.core();
+
+// Import Google Fonts
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap');
+
+// Define custom palettes
+$my-primary-palette: (
+  50: #e3e4e4,
+  100: #b8bcbb,
+  200: #898f8e,
+  300: #5a6260,
+  400: #363e3d,
+  500: #151A19,
+  600: #121716,
+  700: #0f1312,
+  800: #0c0f0e,
+  900: #060808,
+  contrast: (
+    50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: white,
+    400: white,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+  )
+);
+
+$my-accent-palette: (
+  50: #fff4e6,
+  100: #ffe4bf,
+  200: #ffd395,
+  300: #ffc16a,
+  400: #ffb34a,
+  500: #ffa62a,
+  600: #ff9f25,
+  700: #ff961f,
+  800: #ff8c1a,
+  900: #ff7c10,
+  contrast: (
+    50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: rgba(black, 0.87),
+    400: rgba(black, 0.87),
+    500: rgba(black, 0.87),
+    600: rgba(black, 0.87),
+    700: rgba(black, 0.87),
+    800: white,
+    900: white,
+  )
+);
+
+// Create the color palettes
+$my-primary: mat.define-palette($my-primary-palette);
+$my-accent: mat.define-palette($my-accent-palette);
+$my-warn: mat.define-palette(mat.$red-palette);
+
+// Create the theme object
+$my-theme: mat.define-light-theme((
+  color: (
+    primary: $my-primary,
+    accent: $my-accent,
+    warn: $my-warn,
+  ),
+  typography: mat.define-typography-config(
+    $font-family: 'Poppins, sans-serif',
+  ),
+  density: 0,
+));
+// Apply the theme
+@include mat.all-component-themes($my-theme);
+
+// Custom styles
+body {
+  font-family: 'Poppins', sans-serif;
+  background-image: linear-gradient(135deg, #F5EBE0 0%, #FFF8E1 50%, #F5EBE0 100%);
+  background-attachment: fixed;
+  margin: 0 auto;
+  width:100%;
+  
+  &::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.5;
+    z-index: -1;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d0c5b5' fill-opacity='0.2'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+}
+
+// Custom button styles
+.mdc-button.mat-mdc-raised-button.mat-primary {
+  background-color: #FF9966;
+  color: #FFFFFF;
+  border-radius: 20px;
+
+  &:hover {
+    background-color: #FF7733;
+  }
+}

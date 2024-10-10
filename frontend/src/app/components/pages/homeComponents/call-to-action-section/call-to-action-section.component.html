@@ -1,0 +1,22 @@
+<div class="cta-section">
+  <div class="container">
+    <div [@fadeInUp]>
+      <h2 class="title">Ready to Elevate Your Online Presence?</h2>
+    </div>
+    <div [@fadeInUp]>
+      <p class="subtitle">Let's create something extraordinary together. Start your journey now!</p>
+    </div>
+    <div class="button-container" [@fadeInUp]>
+      <a mat-raised-button color="accent" routerLink="/contact" class="cta-button" (mousemove)="onButtonMouseMove($event)">
+        Get Started
+        <mat-icon>arrow_forward</mat-icon>
+      </a>
+    </div>
+    <div class="features" [@staggerAnimation]="features.length">
+      <div *ngFor="let feature of features" class="feature-item">
+        <mat-icon>{{feature.icon}}</mat-icon>
+        <span>{{feature.text}}</span>
+      </div>
+    </div>
+  </div>
+</div>

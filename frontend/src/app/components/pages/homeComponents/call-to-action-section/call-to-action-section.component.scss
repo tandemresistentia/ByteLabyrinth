@@ -1,0 +1,116 @@
+@use '@angular/material' as mat;
+
+.cta-section {
+  padding: 100px 0;
+  margin-top: 100px;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 150px;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.title {
+  margin-bottom: 15px;
+  font-weight: bold;
+  text-align: center;
+  font-size: 2.5rem;
+  color: #333; // Dark text color
+}
+
+.subtitle {
+  margin-bottom: 30px;
+  text-align: center;
+  font-size: 1.2rem;
+  color: #555; // Slightly lighter than the title, but still dark
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.cta-button {
+  font-size: 1.2rem;
+  padding: 16px 48px;
+  border-radius: 50px !important;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  background-color: #FFA500; // Orange color
+  color: white;
+
+  &:hover {
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+    transform: translateY(-3px);
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+
+  .mat-icon {
+    margin-left: 8px;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover .mat-icon {
+    transform: translateX(5px);
+  }
+}
+
+.features {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  margin-top: 50px;
+}
+
+.feature-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin: 0 15px 20px;
+
+  mat-icon {
+    font-size: 2rem;
+    height: 2rem;
+    width: 2rem;
+    margin-bottom: 10px;
+    color: #FFA500; // Orange color for icons
+  }
+
+  span {
+    font-size: 1rem;
+    color: #333; // Dark text color
+  }
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  .cta-button {
+    font-size: 1rem;
+    padding: 12px 36px;
+  }
+
+  .features {
+    flex-direction: column;
+  }
+
+  .feature-item {
+    margin-bottom: 30px;
+  }
+}

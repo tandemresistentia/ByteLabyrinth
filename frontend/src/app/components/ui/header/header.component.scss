@@ -1,0 +1,53 @@
+@use '@angular/material' as mat;
+
+.app-header {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: #F5EBE0;
+  transition: transform 0.3s ease-in-out, box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  &.header-hidden {
+    transform: translateY(-100%);
+  }
+}
+
+.header-content {
+  width: 70%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: mat.get-color-from-palette(mat.define-palette(mat.$grey-palette), 900);
+  font-weight: 700;
+  font-size: 1.2rem;
+
+  mat-icon {
+    margin-right: 8px;
+  }
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+button {
+  text-transform: none;
+  color: mat.get-color-from-palette(mat.define-palette(mat.$grey-palette), 900);
+}
+
+a[mat-raised-button] {
+  margin-left: 16px;
+  border-radius: 25px;
+  padding: 0 24px;
+}

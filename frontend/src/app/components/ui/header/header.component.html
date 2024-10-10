@@ -1,0 +1,15 @@
+<mat-toolbar class="app-header" [class.header-hidden]="!isHeaderVisible">
+  <div class="header-content">
+    <a routerLink="/" class="header-title">
+      <mat-icon>code</mat-icon>
+      ByteLabyrinth
+    </a>
+    <span class="spacer"></span>
+    <button mat-button (click)="scrollTo('hero')">Home</button>
+    <button mat-button (click)="scrollTo('pricing-plans')">Services</button>
+    <button mat-button (click)="scrollTo('development-process')">Our Process</button>
+    <button mat-button (click)="scrollTo('testimonials')">Testimonials</button>
+    <button mat-button (click)="scrollTo('why-choose-us')">Why Us</button>
+    <a mat-raised-button color="primary" routerLink="/login">Log in</a>
+  </div>
+</mat-toolbar>

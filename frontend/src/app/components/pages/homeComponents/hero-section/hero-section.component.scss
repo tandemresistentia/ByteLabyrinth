@@ -1,0 +1,68 @@
+@use '@angular/material' as mat;
+
+:host {
+  width: 100%;
+  display: block;
+}
+
+.hero-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  border-radius: 0 0 50px 50px;
+  background-image: url("data:image/svg+xml,%0A%20%20%20%20%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22100%25%22%20height%3D%22100%25%22%3E%0A%20%20%20%20%20%20%3Cdefs%3E%0A%20%20%20%20%20%20%20%20%3Cpattern%20id%3D%22pattern1%22%20patternUnits%3D%22userSpaceOnUse%22%20width%3D%2260%22%20height%3D%2260%22%20patternTransform%3D%22rotate(45)%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cline%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%2260%22%20stroke%3D%22%23151A19%22%20stroke-width%3D%221%22%20opacity%3D%220.1%22%2F%3E%0A%20%20%20%20%20%20%20%20%3C%2Fpattern%3E%0A%20%20%20%20%20%20%20%20%3Cpattern%20id%3D%22pattern2%22%20patternUnits%3D%22userSpaceOnUse%22%20width%3D%22150%22%20height%3D%22150%22%20patternTransform%3D%22rotate(45)%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Ccircle%20cx%3D%2275%22%20cy%3D%2275%22%20r%3D%2260%22%20fill%3D%22none%22%20stroke%3D%22%23FFD580%22%20stroke-width%3D%221%22%20opacity%3D%220.1%22%2F%3E%0A%20%20%20%20%20%20%20%20%3C%2Fpattern%3E%0A%20%20%20%20%20%20%20%20%3Cpattern%20id%3D%22pattern3%22%20patternUnits%3D%22userSpaceOnUse%22%20width%3D%22100%22%20height%3D%22100%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Crect%20width%3D%22100%22%20height%3D%22100%22%20fill%3D%22url(%23pattern1)%22%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%3Crect%20width%3D%22100%22%20height%3D%22100%22%20fill%3D%22url(%23pattern2)%22%2F%3E%0A%20%20%20%20%20%20%20%20%3C%2Fpattern%3E%0A%20%20%20%20%20%20%20%20%3ClinearGradient%20id%3D%22grad%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20style%3D%22stop-color%3A%23F5EBE0%3Bstop-opacity%3A1%22%20%2F%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20style%3D%22stop-color%3A%23FFE0A0%3Bstop-opacity%3A1%22%20%2F%3E%0A%20%20%20%20%20%20%20%20%3C%2FlinearGradient%3E%0A%20%20%20%20%20%20%3C%2Fdefs%3E%0A%20%20%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22url(%23grad)%22%2F%3E%0A%20%20%20%20%20%20%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22url(%23pattern3)%22%2F%3E%0A%20%20%20%20%3C%2Fsvg%3E%0A%20%20");
+  width: 100%;
+  margin-bottom: 150px;
+}
+
+.content-container {
+  max-width: 1200px;
+  width: 45%;
+  margin: 0 auto;
+  text-align: center;
+  padding: 0 16px;
+  position: relative;
+  z-index: 1;
+}
+
+h1 {
+  font-size: 3.5rem;
+  margin-bottom: 2rem;
+  line-height: 1.2;
+  color: mat.get-color-from-palette(mat.define-palette(mat.$grey-palette), 900);
+}
+
+.highlight {
+  color: #FAF3E8;
+  background-color: #151A19;
+  padding-left: 8px;
+  padding-right: 8px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px #151A19;
+}
+
+h2 {
+  font-size: 1.25rem;
+  color: mat.get-color-from-palette(mat.define-palette(mat.$grey-palette), 700);
+  margin-bottom: 2rem;
+  max-width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+button {
+  font-size: 1rem;
+  background-color: #FFA62A;
+  color: white;
+  &:hover {
+    background-color: #FF9966;
+  }
+}
