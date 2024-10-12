@@ -1,0 +1,27 @@
+<div class="popup-overlay" *ngIf="isOpen">
+    <div class="popup-content">
+      <h2>Project Specification for {{ service?.name }}</h2>
+      <p>{{ service?.description }}</p>
+      <h3>Price: {{ service?.price }}</h3>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Project Name</mat-label>
+        <input matInput [(ngModel)]="projectName" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Project Description</mat-label>
+        <textarea matInput [(ngModel)]="projectDescription" rows="4" required></textarea>
+      </mat-form-field>
+
+      <h3>Features:</h3>
+      <ul>
+        <li *ngFor="let feature of service?.features">{{ feature }}</li>
+      </ul>
+
+      <div class="button-group">
+        <button mat-raised-button color="primary" (click)="submitSpecification()">Submit</button>
+        <button mat-button (click)="close()">Cancel</button>
+      </div>
+    </div>
+  </div>

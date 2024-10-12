@@ -68,7 +68,7 @@ $my-theme: mat.define-light-theme((
     warn: $my-warn,
   ),
   typography: mat.define-typography-config(
-    $font-family: 'Poppins, sans-serif',
+    $font-family: 'Poppins',
   ),
   density: 0,
 ));

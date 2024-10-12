@@ -1,9 +1,12 @@
-import { Component, HostListener, ElementRef, Renderer2, inject } from '@angular/core';
+import { Component, HostListener, ElementRef, Renderer2, inject, ViewChild, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { LoginComponent } from '../../../pages/login/login.component';
+import { AuthService } from '../../../pages/login/components/auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -15,16 +18,37 @@ import { MatIconModule } from '@angular/material/icon';
     RouterModule,
     MatToolbarModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    LoginComponent
   ]
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit, OnDestroy {
   private lastScrollTop = 0;
   private readonly SCROLL_THRESHOLD = 50;
   isHeaderVisible = true;
+  isLoggedIn = false;
 
-  private el = inject(ElementRef);
-  private renderer = inject(Renderer2);
+  private authService = inject(AuthService);
+  private cdr = inject(ChangeDetectorRef);
+
+  private authSubscription: Subscription | undefined;
+
+  @ViewChild(LoginComponent) loginComponent!: LoginComponent;
+
+  ngOnInit() {
+    this.authSubscription = this.authService.authToken$.subscribe(token => {
+      console.log('Auth token changed in HeaderComponent:', token ? 'Token present' : 'No token');
+      this.isLoggedIn = !!token;
+      this.cdr.detectChanges(); // Force change detection
+      console.log('isLoggedIn updated:', this.isLoggedIn);
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
+  }
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
@@ -57,5 +81,15 @@ export class HeaderComponent {
         behavior: 'smooth'
       });
     }
+  }
+
+  openLoginPopup(): void {
+    this.loginComponent.show();
+  }
+
+  logout(): void {
+    console.log('Logout called');
+    this.authService.removeAuthToken();
+    console.log('After removeAuthToken, isLoggedIn:', this.isLoggedIn);
   }
 }

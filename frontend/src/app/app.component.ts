@@ -11,5 +11,5 @@ import { FooterComponent } from './components/ui/footer/footer.component';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'angular-app';
+  title = 'ByteLabyrinth';
 }

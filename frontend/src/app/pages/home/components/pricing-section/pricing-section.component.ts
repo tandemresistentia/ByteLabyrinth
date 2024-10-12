@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+// pricing-section.component.ts
+import { Component, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { ProjectSpecificationPopupComponent } from './components/popup/PopupComponent';
 
 @Component({
   selector: 'app-pricing-section',
@@ -10,11 +12,13 @@ import { MatIconModule } from '@angular/material/icon';
     CommonModule,
     MatButtonModule,
     MatIconModule,
+    ProjectSpecificationPopupComponent
   ],
   templateUrl: './pricing-section.component.html',
   styleUrls: ['./pricing-section.component.scss']
 })
 export class PricingSectionComponent {
+  @Output() openPopup = new EventEmitter<any>();
   services = [
     {
       id: 1,
@@ -66,7 +70,24 @@ export class PricingSectionComponent {
     },
   ];
 
+  isPopupOpen = false;
+  selectedService: any = null;
+
   handleServiceSelect(serviceId: number): void {
-    console.log(`Selected service: ${serviceId}`);
+    this.selectedService = this.services.find(service => service.id === serviceId);
+    this.isPopupOpen = true;
+    console.log('Service selected:', this.selectedService);
+    console.log('Popup should be open:', this.isPopupOpen);
+  }
+
+  closePopup(): void {
+    this.isPopupOpen = false;
+    this.selectedService = null;
+  }
+
+  handleFormSubmit(formData: any): void {
+    console.log('Form submitted:', formData);
+    // Handle the form submission (e.g., send to a service, update state, etc.)
+    this.closePopup();
   }
 }

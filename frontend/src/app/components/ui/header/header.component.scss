@@ -51,3 +51,7 @@ a[mat-raised-button] {
   border-radius: 25px;
   padding: 0 24px;
 }
+
+:host ::ng-deep .mat-mdc-tab-label-container {
+  margin-top: 25px;
+}
