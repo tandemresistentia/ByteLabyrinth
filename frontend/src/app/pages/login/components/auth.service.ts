@@ -68,4 +68,8 @@ export class AuthService {
   isLoggedIn(): boolean {
     return !!this.authTokenSubject.value;
   }
+
+  getAuthToken(): string | null {
+    return sessionStorage.getItem('authToken');
+  }
 }
