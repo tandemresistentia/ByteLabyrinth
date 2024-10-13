@@ -58,6 +58,7 @@ export class LoginComponent {
         this.authService.setAuthToken(response.token); // Set the auth token
         this.snackBar.open('Login successful', 'Close', { duration: 3000 });
         this.close();
+        window.location.reload();
       },
       error => {
         console.error('Login failed', error);
@@ -74,6 +75,7 @@ export class LoginComponent {
         this.authService.setAuthToken(response.token); // Set the auth token
         this.snackBar.open('Signup successful', 'Close', { duration: 3000 });
         this.close();
+        window.location.reload();
       },
       error => {
         console.error('Signup failed', error);

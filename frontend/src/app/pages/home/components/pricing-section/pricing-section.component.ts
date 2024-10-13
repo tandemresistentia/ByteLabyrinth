@@ -1,9 +1,10 @@
-// pricing-section.component.ts
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ProjectSpecificationPopupComponent } from './components/popup/PopupComponent';
+import { AuthService } from '../../../login/components/auth.service';
+import { LoginComponent } from '../../../login/login.component';
 
 @Component({
   selector: 'app-pricing-section',
@@ -12,13 +13,15 @@ import { ProjectSpecificationPopupComponent } from './components/popup/PopupComp
     CommonModule,
     MatButtonModule,
     MatIconModule,
-    ProjectSpecificationPopupComponent
+    ProjectSpecificationPopupComponent,
+    LoginComponent
   ],
   templateUrl: './pricing-section.component.html',
   styleUrls: ['./pricing-section.component.scss']
 })
 export class PricingSectionComponent {
   @Output() openPopup = new EventEmitter<any>();
+  @ViewChild(LoginComponent) loginComponent!: LoginComponent;
   services = [
     {
       id: 1,
@@ -73,11 +76,17 @@ export class PricingSectionComponent {
   isPopupOpen = false;
   selectedService: any = null;
 
+  constructor(private authService: AuthService) {}
+
   handleServiceSelect(serviceId: number): void {
-    this.selectedService = this.services.find(service => service.id === serviceId);
-    this.isPopupOpen = true;
-    console.log('Service selected:', this.selectedService);
-    console.log('Popup should be open:', this.isPopupOpen);
+    if (this.authService.isLoggedIn()) {
+      this.selectedService = this.services.find(service => service.id === serviceId);
+      this.isPopupOpen = true;
+      console.log('Service selected:', this.selectedService);
+      console.log('Popup should be open:', this.isPopupOpen);
+    } else {
+      this.openLoginDialog();
+    }
   }
 
   closePopup(): void {
@@ -89,5 +98,13 @@ export class PricingSectionComponent {
     console.log('Form submitted:', formData);
     // Handle the form submission (e.g., send to a service, update state, etc.)
     this.closePopup();
+  }
+
+  openLoginDialog(): void {
+    if (this.loginComponent) {
+      this.loginComponent.show();
+    } else {
+      console.error('LoginComponent not found');
+    }
   }
 }
