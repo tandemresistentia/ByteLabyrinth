@@ -4,6 +4,12 @@
       <mat-icon>code</mat-icon>
       ByteLabyrinth
     </a>
+    <ng-container *ngIf="isLoggedIn">
+      <a mat-button routerLink="/dashboard" class="dashboard-link">
+        <mat-icon>dashboard</mat-icon>
+        Dashboard
+      </a>
+    </ng-container>
     <span class="spacer"></span>
     <button mat-button (click)="scrollTo('hero')">Home</button>
     <button mat-button (click)="scrollTo('pricing-plans')">Services</button>

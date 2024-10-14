@@ -37,10 +37,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.authSubscription = this.authService.authToken$.subscribe(token => {
-      console.log('Auth token changed in HeaderComponent:', token ? 'Token present' : 'No token');
       this.isLoggedIn = !!token;
       this.cdr.detectChanges(); // Force change detection
-      console.log('isLoggedIn updated:', this.isLoggedIn);
     });
   }
 
@@ -88,8 +86,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   logout(): void {
-    console.log('Logout called');
-    this.authService.removeAuthToken();
-    console.log('After removeAuthToken, isLoggedIn:', this.isLoggedIn);
+  this.authService.logout();
   }
 }

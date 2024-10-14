@@ -7,6 +7,7 @@ export const API_ROUTES = {
   },
   PROJECTS: {
     CREATE: `${BASE_URL}/create`,
+    USER_PROJECTS: `${BASE_URL}/user-projects/:userId`
     // Add more project-related routes as needed
   },
   // Add more categories of routes as your API grows

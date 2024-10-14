@@ -82,8 +82,6 @@ export class PricingSectionComponent {
     if (this.authService.isLoggedIn()) {
       this.selectedService = this.services.find(service => service.id === serviceId);
       this.isPopupOpen = true;
-      console.log('Service selected:', this.selectedService);
-      console.log('Popup should be open:', this.isPopupOpen);
     } else {
       this.openLoginDialog();
     }
@@ -95,16 +93,11 @@ export class PricingSectionComponent {
   }
 
   handleFormSubmit(formData: any): void {
-    console.log('Form submitted:', formData);
     // Handle the form submission (e.g., send to a service, update state, etc.)
     this.closePopup();
   }
 
   openLoginDialog(): void {
-    if (this.loginComponent) {
-      this.loginComponent.show();
-    } else {
-      console.error('LoginComponent not found');
-    }
-  }
+    this.loginComponent.show();
+}
 }

@@ -14,7 +14,6 @@ app.use(express.json());
 
 // Enhanced logging middleware
 app.use((req, res, next) => {
-  console.log(`[${new Date().toISOString()}] Received ${req.method} request for ${req.url}`);
   next();
 });
 
@@ -27,7 +26,7 @@ const PORT = process.env.PORT || 3000;
 
 const startServer = async () => {
   await connectDB(); // Connect to MongoDB
-  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  app.listen(PORT);
 };
 
 startServer().catch(err => {

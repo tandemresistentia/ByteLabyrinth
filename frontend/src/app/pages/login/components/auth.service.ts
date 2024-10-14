@@ -2,6 +2,15 @@ import { Injectable, Optional, PLATFORM_ID, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
+import { jwtDecode } from "jwt-decode";
+
+
+interface DecodedToken {
+  userId: string;
+  email: string;
+  iat: number;
+  exp: number;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +19,8 @@ export class AuthService {
   private apiUrl = 'http://localhost:3000/api/auth';
   private authTokenSubject = new BehaviorSubject<string | null>(null);
   authToken$ = this.authTokenSubject.asObservable();
+  private userIdSubject = new BehaviorSubject<string | null>(null);
+  userId$ = this.userIdSubject.asObservable();
   private isBrowser: boolean;
 
   constructor(
@@ -17,15 +28,31 @@ export class AuthService {
     @Inject(PLATFORM_ID) platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
-    this.checkInitialToken();
+    this.checkInitialAuth();
   }
 
-  private checkInitialToken() {
+  private checkInitialAuth() {
     if (this.isBrowser) {
       const token = sessionStorage.getItem('authToken');
       if (token) {
-        this.authTokenSubject.next(token);
+        this.setAuthToken(token);
       }
+    }
+  }
+
+  getCurrentUser(): { id: string; email: string } | null {
+    const token = this.getAuthToken();
+    if (!token) return null;
+
+    try {
+      const decodedToken = jwtDecode(token) as DecodedToken;
+      return {
+        id: decodedToken.userId,
+        email: decodedToken.email
+      };
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
     }
   }
 
@@ -50,26 +77,44 @@ export class AuthService {
   }
 
   setAuthToken(token: string) {
-    console.log('Setting auth token:', token);
     if (this.isBrowser) {
       sessionStorage.setItem('authToken', token);
     }
     this.authTokenSubject.next(token);
+    
+    try {
+      const decodedToken = jwtDecode(token) as DecodedToken;
+      this.setUserId(decodedToken.userId);
+    } catch (error) {
+      console.error('Error decoding token:', error);
+    }
   }
 
-  removeAuthToken() {
-    console.log('Removing auth token');
+  setUserId(userId: string) {
+    if (this.isBrowser) {
+      sessionStorage.setItem('userId', userId);
+    }
+    this.userIdSubject.next(userId);
+  }
+
+  logout() {
     if (this.isBrowser) {
       sessionStorage.removeItem('authToken');
+      sessionStorage.removeItem('userId');
     }
     this.authTokenSubject.next(null);
+    this.userIdSubject.next(null);
   }
 
   isLoggedIn(): boolean {
-    return !!this.authTokenSubject.value;
+    return !!this.authTokenSubject.value && !!this.userIdSubject.value;
   }
 
   getAuthToken(): string | null {
-    return sessionStorage.getItem('authToken');
+    return this.authTokenSubject.value;
+  }
+
+  getUserId(): string | null {
+    return this.userIdSubject.value;
   }
 }

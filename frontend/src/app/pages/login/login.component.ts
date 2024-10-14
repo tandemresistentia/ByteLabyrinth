@@ -51,34 +51,28 @@ export class LoginComponent {
   }
 
   onLogin() {
-    console.log('Login attempt:', { username: this.username });
     this.authService.login(this.username, this.password).subscribe(
       response => {
-        console.log('Login successful', response);
         this.authService.setAuthToken(response.token); // Set the auth token
         this.snackBar.open('Login successful', 'Close', { duration: 3000 });
         this.close();
         window.location.reload();
       },
       error => {
-        console.error('Login failed', error);
         this.snackBar.open(error.error.message || 'Login failed', 'Close', { duration: 3000 });
       }
     );
   }
 
   onSignup() {
-    console.log('Signup attempt:', { username: this.username, email: this.email });
     this.authService.signup(this.username, this.email, this.password).subscribe(
       response => {
-        console.log('Signup successful', response);
         this.authService.setAuthToken(response.token); // Set the auth token
         this.snackBar.open('Signup successful', 'Close', { duration: 3000 });
         this.close();
         window.location.reload();
       },
       error => {
-        console.error('Signup failed', error);
         this.snackBar.open(error.error.message || 'Signup failed', 'Close', { duration: 3000 });
       }
     );

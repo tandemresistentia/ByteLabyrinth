@@ -6,6 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialogModule } from '@angular/material/dialog';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { API_ROUTES } from '../../../../../../config/api-routes';
 import { AuthService } from '../../../../../login/components/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -37,12 +38,12 @@ export class ProjectSpecificationPopupComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private authService: AuthService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private router: Router
   ) {}
 
   ngOnInit() {
     this.authToken = this.authService.getAuthToken();
-    console.log('Auth token in ProjectSpecificationPopupComponent:', this.authToken);
   }
 
   close(): void {
@@ -69,13 +70,12 @@ export class ProjectSpecificationPopupComponent implements OnInit {
       this.http.post(API_ROUTES.PROJECTS.CREATE, projectData, { headers })
         .subscribe(
           (response: any) => {
-            console.log('Project created successfully', response);
             this.snackBar.open('Project created successfully', 'Close', { duration: 3000 });
             this.submitForm.emit(response);
             this.close();
+            this.router.navigate(['/dashboard']);
           },
           (error: HttpErrorResponse) => {
-            console.error('Error creating project', error);
             if (error.status === 401) {
               this.snackBar.open('Authentication failed. Please log in again.', 'Close', { duration: 3000 });
               // Optionally, you can redirect to login or refresh the token here

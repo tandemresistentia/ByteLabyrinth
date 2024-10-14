@@ -1,0 +1,56 @@
+.project-container {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+  }
+  
+  .project-list {
+    flex: 1;
+    max-width: 50%;
+  }
+  
+  .project-list.full-width {
+    max-width: 100%;
+  }
+  
+  .project-details {
+    flex: 1;
+  }
+  
+  mat-form-field {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+  
+  mat-card {
+    margin-bottom: 15px;
+    cursor: pointer;
+  }
+  
+  .truncate {
+    white-space: normal;
+    overflow: hidden;
+    word-wrap: break-word;
+    max-height: 3em; /* Adjust this value to show more or fewer lines */
+    line-height: 1.5em;
+  }
+  
+  mat-chip-listbox {
+    margin-top: 10px;
+  }
+  
+  h2 {
+    margin-top: 0;
+  }
+  
+  .back-button {
+    margin-bottom: 15px;
+  }
+
+  .project-description{
+    white-space: normal;
+    overflow: hidden;
+    word-wrap: break-word;
+    line-height: 1.5em;
+    max-width: 50%;
+  }
