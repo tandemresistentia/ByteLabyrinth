@@ -1,0 +1,47 @@
+<div class="project-container">
+    <div class="project-list" [class.full-width]="!selectedProject">
+      <div class="filters">
+        <mat-form-field appearance="outline">
+          <mat-label>Search projects</mat-label>
+          <input matInput [(ngModel)]="searchTerm" (input)="applyFilters()" placeholder="Search projects">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Filter by status</mat-label>
+          <mat-select [(ngModel)]="statusFilter" (selectionChange)="applyFilters()">
+            <mat-option value="All">All</mat-option>
+            <mat-option value="Pending">Pending</mat-option>
+            <mat-option value="Approved">Approved</mat-option>
+            <mat-option value="In Progress">In Progress</mat-option>
+            <mat-option value="Under Review">Under Review</mat-option>
+            <mat-option value="Completed">Completed</mat-option>
+            <mat-option value="On Hold">On Hold</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="project-cards">
+        <mat-card *ngFor="let project of filteredProjects" (click)="selectProject(project)" class="project-card">
+          <mat-card-header>
+            <mat-card-title>{{ project.name }}</mat-card-title>
+            <mat-card-subtitle>
+              Created on: {{ project.createdAt | date }}
+            </mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <p class="truncate">{{ project.description }}</p>
+          </mat-card-content>
+          <mat-card-actions>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+    
+    <div class="project-details" *ngIf="selectedProject">
+      <div class="project-detail-upper">
+        <h2>{{ selectedProject.name }}</h2>
+        <p>Created on: {{ selectedProject.createdAt | date }}</p>
+        <p class="project-description">{{ selectedProject.description }}</p>
+      </div>
+      <app-chat [projectId]="selectedProject._id"></app-chat>
+    </div>
+  </div>

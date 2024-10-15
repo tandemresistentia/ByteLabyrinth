@@ -1,8 +1,15 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { io, Socket } from 'socket.io-client';
+import { HttpClient } from '@angular/common/http';
+import { API_ROUTES, SOCKET_URL } from '../../../../config/api-routes';
 
 interface ChatMessage {
+  _id?: string;
   user: string;
   message: string;
   timestamp: Date;
@@ -11,46 +18,91 @@ interface ChatMessage {
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MatInputModule, MatButtonModule, MatIconModule],
   template: `
     <div class="chat-container">
       <div class="chat-messages">
-        <div *ngFor="let msg of messages" class="message">
-          <strong>{{ msg.user }}</strong>: {{ msg.message }}
-          <small>{{ msg.timestamp | date:'short' }}</small>
+        <div *ngFor="let msg of messages" class="message" [ngClass]="msg.user">
+          <div class="avatar">{{ msg.user.charAt(0).toUpperCase() }}</div>
+          <div class="message-content">
+            <strong>{{ msg.user }}</strong>
+            <p>{{ msg.message }}</p>
+            <small>{{ msg.timestamp | date:'short' }}</small>
+          </div>
         </div>
       </div>
       <div class="chat-input">
-        <input [(ngModel)]="newMessage" (keyup.enter)="sendMessage()" placeholder="Type a message...">
-        <button (click)="sendMessage()">Send</button>
+        <mat-form-field appearance="outline">
+          <input matInput [(ngModel)]="newMessage" (keyup.enter)="sendMessage()" placeholder="Type a message...">
+        </mat-form-field>
+        <button mat-fab color="primary" (click)="sendMessage()">
+          <mat-icon>send</mat-icon>
+        </button>
       </div>
     </div>
   `,
   styleUrls: ['./chat.component.css']
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent implements OnInit, OnDestroy {
   @Input() projectId: string | undefined;
   messages: ChatMessage[] = [];
   newMessage: string = '';
-  currentUser: string = 'User';  // This could be set dynamically
+  currentUser: string = 'User'; // This should be set dynamically
+  private socket: Socket;
+
+  constructor(private http: HttpClient) {
+    this.socket = io(SOCKET_URL);
+  }
 
   ngOnInit() {
-    // You could load initial messages here, possibly filtered by projectId
-    this.messages.push({
-      user: 'System',
-      message: `Welcome to the chat for project ${this.projectId}!`,
-      timestamp: new Date()
+    if (this.projectId) {
+      this.socket.emit('join', this.projectId);
+      this.loadInitialMessages();
+    }
+
+    this.socket.on('message', (message: ChatMessage) => {
+      this.messages.push(message);
     });
   }
 
+  ngOnDestroy() {
+    this.socket.disconnect();
+  }
+
+  loadInitialMessages() {
+    if (this.projectId) {
+      const url = API_ROUTES.CHAT.GET_MESSAGES.replace(':projectId', this.projectId);
+      this.http.get<ChatMessage[]>(url).subscribe(
+        (messages) => {
+          this.messages = messages;
+        },
+        (error) => {
+          console.error('Error fetching messages:', error);
+        }
+      );
+    }
+  }
+
   sendMessage() {
-    if (this.newMessage.trim()) {
-      this.messages.push({
+    if (this.newMessage.trim() && this.projectId) {
+      const message: ChatMessage = {
         user: this.currentUser,
         message: this.newMessage,
         timestamp: new Date()
-      });
-      this.newMessage = '';
+      };
+
+      this.http.post<ChatMessage>(API_ROUTES.CHAT.SEND_MESSAGE, {
+        projectId: this.projectId,
+        message: this.newMessage
+      }).subscribe(
+        (sentMessage) => {
+          this.socket.emit('chatMessage', sentMessage);
+          this.newMessage = '';
+        },
+        (error) => {
+          console.error('Error sending message:', error);
+        }
+      );
     }
   }
 }

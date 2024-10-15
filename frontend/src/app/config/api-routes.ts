@@ -10,5 +10,11 @@ export const API_ROUTES = {
     USER_PROJECTS: `${BASE_URL}/user-projects/:userId`
     // Add more project-related routes as needed
   },
+  CHAT: {
+    GET_MESSAGES: `${BASE_URL}/chat/:projectId`,
+    SEND_MESSAGE: `${BASE_URL}/chat`
+  }
   // Add more categories of routes as your API grows
 };
+
+export const SOCKET_URL = 'http://localhost:3000'; // WebSocket server URL

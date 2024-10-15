@@ -6,39 +6,34 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../login/components/auth.service';
 import { ProjectComponent } from './components/project/project.component';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { API_ROUTES } from '../../config/api-routes';
-
-interface Project {
-  _id: string;
-  name: string;
-  description: string;
-  createdAt: string;
-  status: 'Pending' | 'Approved' | 'In Progress' | 'Under Review' | 'Completed' | 'On Hold';
-}
+import { catchError, timeout } from 'rxjs/operators';
+import { throwError } from 'rxjs';
+import { Project } from './components/project/project.interface';
 
 @Component({
   selector: 'app-dashboard',
   template: `
-  <div class="dashboard-container">
-  <mat-toolbar color="primary">
-    <mat-icon>dashboard</mat-icon>
-    <span>Project Dashboard</span>
-  </mat-toolbar>
-  
-  <div class="dashboard-content" *ngIf="!loading && !error">
-    <app-project [projects]="projects"></app-project>
-  </div>
-  
-  <div class="loading-spinner" *ngIf="loading">
-    <mat-spinner></mat-spinner>
-  </div>
-  
-  <div *ngIf="error" class="error-message">
-    <mat-icon>error</mat-icon>
-    <span>{{ error }}</span>
-  </div>
-</div>
+    <div class="dashboard-container">
+      <div class="dashboard-content" *ngIf="!loading && !error && projects.length > 0">
+        <app-project [projects]="projects"></app-project>
+      </div>
+      
+      <div class="loading-spinner" *ngIf="loading">
+        <mat-spinner></mat-spinner>
+      </div>
+      
+      <div *ngIf="error" class="error-message">
+        <mat-icon>error</mat-icon>
+        <span>{{ error }}</span>
+      </div>
+
+      <div *ngIf="!loading && !error && projects.length === 0" class="no-projects-message">
+        <mat-icon>info</mat-icon>
+        <span>No projects found. Create a new project to get started!</span>
+      </div>
+    </div>
   `,
   styleUrls: ['./dashboard.component.css'],
   standalone: true,
@@ -54,7 +49,7 @@ interface Project {
 export class DashboardComponent implements OnInit {
   projects: Project[] = [];
   loading: boolean = false;
-  error: string | null = null;
+  error: string | any = null;
   isBrowser: boolean;
 
   constructor(
@@ -88,19 +83,50 @@ export class DashboardComponent implements OnInit {
     });
 
     const url = API_ROUTES.PROJECTS.USER_PROJECTS.replace(':userId', userId);
-
     this.http.get<Project[]>(url, { headers })
-      .subscribe(
-        (projects) => {
+      .pipe(
+        timeout(10000),  // 10 seconds timeout
+        catchError(this.handleError)
+      )
+      .subscribe({
+        next: (projects) => {
           this.projects = projects;
           this.loading = false;
         },
-        (error: any) => {
+        error: (error: any) => {
           console.error('Error fetching user projects', error);
-          this.error = 'Error fetching projects. Please try again later.';
+          this.error = error.message || 'An unexpected error occurred';
           this.snackBar.open(this.error, 'Close', { duration: 3000 });
           this.loading = false;
+        },
+        complete: () => {
+          this.loading = false;
         }
-      );
+      });
+  }
+
+  private handleError = (error: HttpErrorResponse) => {
+    let errorMessage = '';
+    if (error.error instanceof ErrorEvent) {
+      // Client-side error
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      // Server-side error
+      switch (error.status) {
+        case 401:
+          errorMessage = 'Authentication failed. Please log in again.';
+          this.authService.logout();  // Assuming you have a logout method
+          break;
+        case 404:
+          errorMessage = 'No projects found.';
+          break;
+        case 0:
+          errorMessage = 'Unable to connect to the server. Please check your internet connection.';
+          break;
+        default:
+          errorMessage = `Error fetching projects. Please try again later. (Status: ${error.status})`;
+      }
+    }
+    return throwError(() => new Error(errorMessage));
   }
 }

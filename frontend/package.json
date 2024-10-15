@@ -28,6 +28,7 @@
     "jwt-decode": "^4.0.0",
     "ng-chat": "^3.1.0",
     "rxjs": "7.8.1",
+    "socket.io-client": "^4.8.0",
     "talkjs": "^0.27.0",
     "tslib": "^2.6.2",
     "zone.js": "0.14.4"
