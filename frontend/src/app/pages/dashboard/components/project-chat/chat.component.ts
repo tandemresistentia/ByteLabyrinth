@@ -5,12 +5,15 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { io, Socket } from 'socket.io-client';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { API_ROUTES, SOCKET_URL } from '../../../../config/api-routes';
 
 interface ChatMessage {
   _id?: string;
-  user: string;
+  user: {
+    _id: string;
+    username: string;
+  };
   message: string;
   timestamp: Date;
 }
@@ -22,10 +25,10 @@ interface ChatMessage {
   template: `
     <div class="chat-container">
       <div class="chat-messages">
-        <div *ngFor="let msg of messages" class="message" [ngClass]="msg.user">
-          <div class="avatar">{{ msg.user.charAt(0).toUpperCase() }}</div>
+        <div *ngFor="let msg of messages" class="message" [ngClass]="msg.user.username">
+          <div class="avatar">{{ msg.user.username.charAt(0).toUpperCase() }}</div>
           <div class="message-content">
-            <strong>{{ msg.user }}</strong>
+            <strong>{{ msg.user.username }}</strong>
             <p>{{ msg.message }}</p>
             <small>{{ msg.timestamp | date:'short' }}</small>
           </div>
@@ -47,11 +50,16 @@ export class ChatComponent implements OnInit, OnDestroy {
   @Input() projectId: string | undefined;
   messages: ChatMessage[] = [];
   newMessage: string = '';
-  currentUser: string = 'User'; // This should be set dynamically
   private socket: Socket;
+  private authToken: string;
 
   constructor(private http: HttpClient) {
-    this.socket = io(SOCKET_URL);
+    this.authToken = sessionStorage.getItem('authToken') || '';
+    this.socket = io(SOCKET_URL, {
+      auth: {
+        token: this.authToken
+      }
+    });
   }
 
   ngOnInit() {
@@ -72,7 +80,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   loadInitialMessages() {
     if (this.projectId) {
       const url = API_ROUTES.CHAT.GET_MESSAGES.replace(':projectId', this.projectId);
-      this.http.get<ChatMessage[]>(url).subscribe(
+      this.http.get<ChatMessage[]>(url, this.getHttpOptions()).subscribe(
         (messages) => {
           this.messages = messages;
         },
@@ -85,18 +93,11 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   sendMessage() {
     if (this.newMessage.trim() && this.projectId) {
-      const message: ChatMessage = {
-        user: this.currentUser,
-        message: this.newMessage,
-        timestamp: new Date()
-      };
-
       this.http.post<ChatMessage>(API_ROUTES.CHAT.SEND_MESSAGE, {
         projectId: this.projectId,
         message: this.newMessage
-      }).subscribe(
+      }, this.getHttpOptions()).subscribe(
         (sentMessage) => {
-          this.socket.emit('chatMessage', sentMessage);
           this.newMessage = '';
         },
         (error) => {
@@ -104,5 +105,14 @@ export class ChatComponent implements OnInit, OnDestroy {
         }
       );
     }
+  }
+
+  private getHttpOptions() {
+    return {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.authToken}`
+      })
+    };
   }
 }

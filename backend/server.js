@@ -1,12 +1,12 @@
 const express = require('express');
+const http = require('http');
+const socketIo = require('socket.io');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./db');
 const authRoutes = require('./routes/auth');
 const projectRoutes = require('./routes/projectRoutes');
 const chatRoutes = require('./routes/chatRoutes');
-const http = require('http');
-const socketIo = require('socket.io');
 
 dotenv.config();
 
@@ -22,11 +22,8 @@ const io = socketIo(server, {
 app.use(cors());
 app.use(express.json());
 
-// Enhanced logging middleware
-app.use((req, res, next) => {
-  console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
-  next();
-});
+// Make io available to our routes
+app.set('io', io);
 
 // Mount routes
 app.use('/api/auth', authRoutes);
@@ -40,10 +37,6 @@ io.on('connection', (socket) => {
   socket.on('join', (projectId) => {
     socket.join(projectId);
     console.log(`User joined chat for project ${projectId}`);
-  });
-
-  socket.on('chatMessage', (message) => {
-    io.to(message.projectId).emit('message', message);
   });
 
   socket.on('disconnect', () => {
@@ -62,10 +55,4 @@ const startServer = async () => {
 startServer().catch(err => {
   console.error('Failed to start server:', err);
   process.exit(1);
-});
-
-// Global error handler
-app.use((err, req, res, next) => {
-  console.error('Unhandled error:', err);
-  res.status(500).json({ message: 'Internal server error', error: err.message });
 });
