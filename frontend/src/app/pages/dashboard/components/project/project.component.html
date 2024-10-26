@@ -1,47 +1,75 @@
 <div class="project-container">
-    <div class="project-list" [class.full-width]="!selectedProject">
-      <div class="filters">
-        <mat-form-field appearance="outline">
-          <mat-label>Search projects</mat-label>
-          <input matInput [(ngModel)]="searchTerm" (input)="applyFilters()" placeholder="Search projects">
-          <mat-icon matSuffix>search</mat-icon>
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Filter by status</mat-label>
-          <mat-select [(ngModel)]="statusFilter" (selectionChange)="applyFilters()">
-            <mat-option value="All">All</mat-option>
-            <mat-option value="Pending">Pending</mat-option>
-            <mat-option value="Approved">Approved</mat-option>
-            <mat-option value="In Progress">In Progress</mat-option>
-            <mat-option value="Under Review">Under Review</mat-option>
-            <mat-option value="Completed">Completed</mat-option>
-            <mat-option value="On Hold">On Hold</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <div class="project-cards">
-        <mat-card *ngFor="let project of filteredProjects" (click)="selectProject(project)" class="project-card">
-          <mat-card-header>
-            <mat-card-title>{{ project.name }}</mat-card-title>
-            <mat-card-subtitle>
-              Created on: {{ project.createdAt | date }}
-            </mat-card-subtitle>
-          </mat-card-header>
-          <mat-card-content>
-            <p class="truncate">{{ project.description }}</p>
-          </mat-card-content>
-          <mat-card-actions>
-          </mat-card-actions>
-        </mat-card>
-      </div>
+  <div class="project-list" [class.full-width]="!selectedProject">
+    <div class="filters">
+      <mat-form-field appearance="outline">
+        <mat-label>Search projects</mat-label>
+        <input matInput [(ngModel)]="searchTerm" (input)="applyFilters()" placeholder="Search projects">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Filter by status</mat-label>
+        <mat-select [(ngModel)]="statusFilter" (selectionChange)="applyFilters()">
+          <mat-option value="All">All</mat-option>
+          <mat-option value="Pending">Pending</mat-option>
+          <mat-option value="Approved">Approved</mat-option>
+          <mat-option value="In Progress">In Progress</mat-option>
+          <mat-option value="Under Review">Under Review</mat-option>
+          <mat-option value="Completed">Completed</mat-option>
+          <mat-option value="On Hold">On Hold</mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
-    
-    <div class="project-details" *ngIf="selectedProject">
-      <div class="project-detail-upper">
-        <h2>{{ selectedProject.name }}</h2>
-        <p>Created on: {{ selectedProject.createdAt | date }}</p>
-        <p class="project-description">{{ selectedProject.description }}</p>
-      </div>
-      <app-chat [projectId]="selectedProject._id"></app-chat>
+    <div class="project-cards">
+      <mat-card *ngFor="let project of filteredProjects" 
+                (click)="selectProject(project)" 
+                [class.selected]="selectedProject?._id === project._id"
+                class="project-card">
+        <mat-card-header>
+          <mat-card-title>{{ project.name }}</mat-card-title>
+          <mat-card-subtitle>
+            Created on: {{ project.createdAt | date }}
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p class="truncate">{{ project.description }}</p>
+        </mat-card-content>
+      </mat-card>
     </div>
   </div>
+  
+  <div class="project-details" *ngIf="selectedProject">
+    <div class="project-detail-upper">
+      <h2>{{ selectedProject.name }}</h2>
+      <p>Created on: {{ selectedProject.createdAt | date }}</p>
+      <p class="project-description">{{ selectedProject.description }}</p>
+    </div>
+    
+    <!-- Chat Section -->
+    <div class="chat-container">
+      <div class="chat-messages" #scrollContainer>
+        <div *ngFor="let msg of messages" class="message" 
+             [ngClass]="{'my-message': msg.user._id === getCurrentUserId()}">
+          <div class="avatar">{{ msg.user.username.charAt(0).toUpperCase() }}</div>
+          <div class="message-content">
+            <strong>{{ msg.user.username }}</strong>
+            <p>{{ msg.message }}</p>
+            <small>{{ msg.timestamp | date:'short' }}</small>
+          </div>
+        </div>
+      </div>
+      <div class="chat-input">
+        <mat-form-field appearance="outline">
+          <input matInput 
+                 [(ngModel)]="newMessage" 
+                 (keyup.enter)="sendMessage()" 
+                 placeholder="Type a message...">
+        </mat-form-field>
+        <button mat-fab color="primary" 
+                [disabled]="!newMessage.trim()" 
+                (click)="sendMessage()">
+          <mat-icon>send</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

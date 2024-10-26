@@ -4,14 +4,23 @@ const socketIo = require('socket.io');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./db');
+
+// Route imports
 const authRoutes = require('./routes/auth');
 const projectRoutes = require('./routes/projectRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 
+// Controllers
+const chatController = require('./controllers/chatController');
+
+// Load environment variables
 dotenv.config();
 
+// Initialize express and create HTTP server
 const app = express();
 const server = http.createServer(app);
+
+// Configure Socket.IO
 const io = socketIo(server, {
   cors: {
     origin: "*",
@@ -19,40 +28,32 @@ const io = socketIo(server, {
   }
 });
 
+// Middleware
 app.use(cors());
 app.use(express.json());
+app.set('io', io); // Make io available to routes
 
-// Make io available to our routes
-app.set('io', io);
-
-// Mount routes
+// API Routes
 app.use('/api/auth', authRoutes);
-app.use('/api', projectRoutes);
-app.use('/api/chat', chatRoutes);
+app.use('/api', projectRoutes);  
+app.use('/api', chatRoutes);  
 
-// WebSocket connection handler
-io.on('connection', (socket) => {
-  console.log('New WebSocket connection');
+// Initialize socket event handlers
+chatController.handleSocketEvents(io);
 
-  socket.on('join', (projectId) => {
-    socket.join(projectId);
-    console.log(`User joined chat for project ${projectId}`);
-  });
-
-  socket.on('disconnect', () => {
-    console.log('User disconnected');
-  });
-});
-
-// Start server
+// Server startup
 const PORT = process.env.PORT || 3000;
 
 const startServer = async () => {
-  await connectDB(); // Connect to MongoDB
-  server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  try {
+    await connectDB();
+    server.listen(PORT, () => {
+      console.log(`Server running on http://localhost:${PORT}`);
+    });
+  } catch (error) {
+    console.error('Failed to start server:', error);
+    process.exit(1);
+  }
 };
 
-startServer().catch(err => {
-  console.error('Failed to start server:', err);
-  process.exit(1);
-});
+startServer();

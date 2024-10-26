@@ -7,12 +7,14 @@ export const API_ROUTES = {
   },
   PROJECTS: {
     CREATE: `${BASE_URL}/create`,
-    USER_PROJECTS: `${BASE_URL}/user-projects/:userId`
+    BASE: `${BASE_URL}/projects`,
+    USER_PROJECTS: `${BASE_URL}/projects/user/:userId`,
+    PARTICIPANT_PROJECTS: `${BASE_URL}/projects/participant/:userId`
     // Add more project-related routes as needed
   },
   CHAT: {
-    GET_MESSAGES: `${BASE_URL}/chat/:projectId`,
-    SEND_MESSAGE: `${BASE_URL}/chat`
+    GET_MESSAGES: `${BASE_URL}/projects/:projectId/messages`,
+    SEND_MESSAGE: `${BASE_URL}/projects/:projectId/messages`
   }
   // Add more categories of routes as your API grows
 };

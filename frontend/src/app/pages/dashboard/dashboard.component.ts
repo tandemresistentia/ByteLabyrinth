@@ -10,7 +10,6 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { API_ROUTES } from '../../config/api-routes';
 import { catchError, timeout } from 'rxjs/operators';
 import { throwError } from 'rxjs';
-import { Project } from './components/project/project.interface';
 
 @Component({
   selector: 'app-dashboard',
@@ -47,7 +46,7 @@ import { Project } from './components/project/project.interface';
   ]
 })
 export class DashboardComponent implements OnInit {
-  projects: Project[] = [];
+  projects: any[] = [];
   loading: boolean = false;
   error: string | any = null;
   isBrowser: boolean;
@@ -82,8 +81,9 @@ export class DashboardComponent implements OnInit {
       'Authorization': `Bearer ${authToken}`
     });
 
-    const url = API_ROUTES.PROJECTS.USER_PROJECTS.replace(':userId', userId);
-    this.http.get<Project[]>(url, { headers })
+    const url = `${API_ROUTES.PROJECTS.BASE}/${userId}`;
+    
+    this.http.get<any[]>(url, { headers })
       .pipe(
         timeout(10000),  // 10 seconds timeout
         catchError(this.handleError)
@@ -91,6 +91,10 @@ export class DashboardComponent implements OnInit {
       .subscribe({
         next: (projects) => {
           this.projects = projects;
+          console.log(this.projects);
+          this.projects.sort((a,b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
           this.loading = false;
         },
         error: (error: any) => {
