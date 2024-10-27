@@ -1,4 +1,3 @@
-// controllers/chatController.js
 const Chat = require('../models/Chat');
 const Project = require('../models/Project');
 const mongoose = require('mongoose');
@@ -11,18 +10,21 @@ exports.getMessages = async (req, res) => {
     const userId = req.user.id;
     const projectObjectId = new mongoose.Types.ObjectId(projectId);
 
-    // Verify project exists
+    // Verify project exists and user has access
     const project = await Project.findById(projectObjectId);
     if (!project) {
       return res.status(404).json({ message: 'Project not found' });
     }
 
+    // Check if user is admin or project creator
+    if (userId !== ADMIN_USER_ID && project.createdBy.toString() !== userId) {
+      return res.status(403).json({ message: 'Not authorized to access this chat' });
+    }
+
     const chat = await Chat.findOne({ 
-      projectId: projectObjectId,
-      participants: userId
+      projectId: projectObjectId
     })
       .populate('messages.user', 'username')
-      .populate('participants', 'username')
       .sort({ 'messages.timestamp': 1 })
       .exec();
 
@@ -55,24 +57,29 @@ exports.sendMessage = async (req, res) => {
     const projectObjectId = new mongoose.Types.ObjectId(projectId);
     const userObjectId = new mongoose.Types.ObjectId(userId);
 
-    // Verify project exists
+    // Verify project exists and user has access
     const project = await Project.findById(projectObjectId);
     if (!project) {
       return res.status(404).json({ message: 'Project not found' });
     }
 
-    // Find or create chat with the converted ObjectId
+    // Check if user is admin or project creator
+    if (userId !== ADMIN_USER_ID && project.createdBy.toString() !== userId) {
+      return res.status(403).json({ message: 'Not authorized to send messages in this chat' });
+    }
+
+    // Find or create chat
     let chat = await Chat.findOne({ projectId: projectObjectId }).exec();
     
     if (!chat) {
       console.log('Creating new chat');
       chat = new Chat({
-        projectId: [projectObjectId, ADMIN_USER_ID],
+        projectId: projectObjectId,
         messages: []
       });
     }
 
-    // Add message using the converted userObjectId
+    // Add message
     chat.messages.push({
       user: userObjectId,
       message: message,
@@ -86,11 +93,9 @@ exports.sendMessage = async (req, res) => {
     await chat.populate('messages.user', 'username email');
     const populatedMessage = chat.messages[chat.messages.length - 1];
 
-    
     // Emit to Socket.IO
     const io = req.app.get('io');
     if (io) {
-      console.log(populatedMessage);
       io.to(projectId).emit('new-message', {
         ...populatedMessage.toObject(),
         projectId
@@ -107,7 +112,6 @@ exports.sendMessage = async (req, res) => {
   }
 };
 
-// Add helper function for socket room management
 exports.handleSocketEvents = (io) => {
   io.on('connection', (socket) => {
     console.log('Client connected:', socket.id);
@@ -124,8 +128,8 @@ exports.handleSocketEvents = (io) => {
           return;
         }
 
-        // Allow if admin or participant
-        if (userId === ADMIN_USER_ID || project.participants.some(p => p.user.toString() === userId)) {
+        // Allow if admin or project creator
+        if (userId === ADMIN_USER_ID || project.createdBy.toString() === userId) {
           socket.join(projectId);
           console.log(`User ${userId} joined project chat: ${projectId}`);
           socket.emit('joined-project', { projectId });

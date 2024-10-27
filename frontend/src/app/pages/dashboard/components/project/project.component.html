@@ -24,11 +24,16 @@
                 (click)="selectProject(project)" 
                 [class.selected]="selectedProject?._id === project._id"
                 class="project-card">
-        <mat-card-header>
+        <mat-card-header class="card-class-header">
           <mat-card-title>{{ project.name }}</mat-card-title>
           <mat-card-subtitle>
             Created on: {{ project.createdAt | date }}
           </mat-card-subtitle>
+          <mat-chip-listbox aria-label="Project status">
+            <mat-chip [color]="getStatusColor(project.status)" selected>
+              {{ project.status }}
+            </mat-chip>
+          </mat-chip-listbox>
         </mat-card-header>
         <mat-card-content>
           <p class="truncate">{{ project.description }}</p>
@@ -39,9 +44,15 @@
   
   <div class="project-details" *ngIf="selectedProject">
     <div class="project-detail-upper">
+      <div class="project-detail-upper-left">
       <h2>{{ selectedProject.name }}</h2>
       <p>Created on: {{ selectedProject.createdAt | date }}</p>
       <p class="project-description">{{ selectedProject.description }}</p>
+    </div>
+      <app-project-status-selector
+      [currentStatus]="selectedProject.status"
+      (statusChange)="updateProjectStatus($event)">
+    </app-project-status-selector>
     </div>
     
     <!-- Chat Section -->

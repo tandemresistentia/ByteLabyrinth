@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+const PROJECT_STATUSES = ['Pending', 'Approved', 'In Progress', 'Under Review', 'Completed', 'On Hold'];
+
 const projectSchema = new mongoose.Schema({
   name: { 
     type: String, 
@@ -17,6 +19,11 @@ const projectSchema = new mongoose.Schema({
   createdAt: { 
     type: Date, 
     default: Date.now 
+  },
+  status: {
+    type: String,
+    enum: PROJECT_STATUSES,
+    default: 'Pending'
   }
 });
 
