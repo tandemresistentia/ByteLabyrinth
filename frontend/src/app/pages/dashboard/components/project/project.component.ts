@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy, ViewChild, ElementRef, inject } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -8,12 +8,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { Subscription } from 'rxjs';
-import { ChatService } from './chat.service';
-import { AuthService } from '../../../login/components/auth.service';
-import { ProjectStatus } from './project-status/project-status.enum';
-import { ProjectStatusService } from './project-status/project-status.service';
-import { ProjectStatusSelectorComponent } from './project-status/project-status-selector.component';
+import { ProjectStatus } from './components/project-status/project-status.enum';
+import { ProjectStatusService } from './components/project-status/project-status.service';
+import { ProjectStatusSelectorComponent } from './components/project-status/project-status-selector.component';
+import { ChatComponent } from './components/chat/chat.component';
 
 @Component({
   selector: 'app-project',
@@ -30,41 +28,29 @@ import { ProjectStatusSelectorComponent } from './project-status/project-status-
     MatChipsModule,
     MatButtonModule,
     MatIconModule,
-    ProjectStatusSelectorComponent
+    ProjectStatusSelectorComponent,
+    ChatComponent
   ]
 })
-export class ProjectComponent implements OnInit, OnDestroy {
-  @Input() projects:any[] = [];
-  @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
+export class ProjectComponent implements OnInit {
+  @Input() projects: any[] = [];
   
   filteredProjects: any[] = [];
   selectedProject: any | null = null;
   searchTerm: string = '';
   statusFilter: string = 'All';
-  private authService = inject(AuthService);
-  messages: any[] = [];
-  newMessage: string = '';
-  isConnected: boolean = false;
-  private subscriptions: Subscription[] = [];
   private hasInitializedChat: boolean = false;
 
   constructor(
-    private chatService: ChatService,
     public projectStatusService: ProjectStatusService
   ) {}
 
   ngOnInit() {
-    this.setupSubscriptions();
     this.applyFilters();
-  if (!this.hasInitializedChat && this.filteredProjects.length > 0) {
-    this.selectProject(this.filteredProjects[0]);
-    this.hasInitializedChat = true;
-  }
-  }
-
-  ngOnDestroy() {
-    this.leaveCurrentChat();
-    this.subscriptions.forEach(sub => sub.unsubscribe());
+    if (!this.hasInitializedChat && this.filteredProjects.length > 0) {
+      this.selectProject(this.filteredProjects[0]);
+      this.hasInitializedChat = true;
+    }
   }
 
   updateProjectStatus(newStatus: ProjectStatus) {
@@ -78,87 +64,8 @@ export class ProjectComponent implements OnInit, OnDestroy {
     return this.projectStatusService.getStatusColor(status);
   }
 
-  getAvatarColor(username: string): string {
-    // Generate a consistent hue based on username
-    const hue = username.split('')
-      .reduce((acc, char) => acc + char.charCodeAt(0), 0) % 360;
-    return `hsl(${hue}, 70%, 50%)`;
-  }
-
-  private setupSubscriptions() {
-    // Track connection status
-    this.subscriptions.push(
-      this.chatService.getConnectionStatus().subscribe(
-        isConnected => {
-          const wasDisconnected = !this.isConnected && isConnected;
-          this.isConnected = isConnected;
-          
-          if (wasDisconnected && this.selectedProject) {
-            // Rejoin chat and reload messages if we're reconnecting
-            this.joinProjectChat(this.selectedProject._id);
-          }
-        }
-      )
-    );
-    // Listen for new messages
-    this.subscriptions.push(
-      this.chatService.onNewMessage().subscribe(
-        message => {
-          if (this.selectedProject && 
-              message.user._id !== this.authService.getUserId()) {
-            this.messages.push(message);
-            requestAnimationFrame(() => {
-            this.scrollToBottom();
-          });
-          }
-        }
-      )
-    );
-  }
-
-  private joinProjectChat(projectId: string) {
-    this.chatService.joinChat(projectId).subscribe({
-      next: () => {
-        this.loadInitialMessages();
-      },
-      error: (error) =>  {
-        console.error('Error joining chat:', error);
-        this.loadInitialMessages();
-      }
-    });
-  }
-
   selectProject(project: any) {
-    this.leaveCurrentChat();
     this.selectedProject = project;
-    this.messages = [];
-    
-    // Only try to join if connected
-    if (this.isConnected) {
-      this.joinProjectChat(project._id);
-    } else {
-      this.loadInitialMessages();
-    }
-  }
-
-  private loadInitialMessages() {
-    if (!this.selectedProject) return;
-
-    this.chatService.getMessages(this.selectedProject._id).subscribe(
-      (messages) => {
-        this.messages = messages;
-        setTimeout(() => this.scrollToBottom(), 100);
-      },
-      (error) => {
-        console.error('Error fetching messages:', error);
-      }
-    );
-  }
-
-  private leaveCurrentChat() {
-    if (this.selectedProject) {
-      this.chatService.leaveChat(this.selectedProject._id);
-    }
   }
 
   applyFilters() {
@@ -166,40 +73,5 @@ export class ProjectComponent implements OnInit, OnDestroy {
       project.name.toLowerCase().includes(this.searchTerm.toLowerCase()) &&
       (this.statusFilter === 'All' || project.status === this.statusFilter)
     );
-  }
-
-  sendMessage() {
-    if (!this.isConnected) {
-      console.error('Cannot send message: Not connected');
-      return;
-    }
-
-    if (this.newMessage.trim() && this.selectedProject) {
-      this.chatService.sendMessage(this.selectedProject._id, this.newMessage.trim())
-        .subscribe({
-          next: (sentMessage) => {
-            this.messages.push(sentMessage);
-            this.newMessage = '';
-            requestAnimationFrame(() => {
-              this.scrollToBottom();
-            });
-          },
-          error: (error) => console.error('Error sending message:', error)
-        });
-    }
-  }
-
-  getCurrentUserId(): string {
-    const user = JSON.parse(sessionStorage.getItem('user') || '{}');
-    return user._id || '';
-  }
-
-  private scrollToBottom(): void {
-    try {
-      const element = this.scrollContainer.nativeElement;
-      element.scrollTop = element.scrollHeight;
-    } catch (err) {
-      console.error('Error scrolling to bottom:', err);
-    }
   }
 }
