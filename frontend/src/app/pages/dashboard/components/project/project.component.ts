@@ -12,7 +12,9 @@ import { ProjectStatus } from './components/project-status/project-status.enum';
 import { ProjectStatusService } from './components/project-status/project-status.service';
 import { ProjectStatusSelectorComponent } from './components/project-status/project-status-selector.component';
 import { ChatComponent } from './components/chat/chat.component';
-
+import { ProjectService } from './project.service';
+import { AuthService } from '../../../login/components/auth.service';
+const { ADMIN_USER_ID } = require('../../../../../../../backend/models/constants.js');
 @Component({
   selector: 'app-project',
   templateUrl: './project.component.html',
@@ -40,12 +42,16 @@ export class ProjectComponent implements OnInit {
   searchTerm: string = '';
   statusFilter: string = 'All';
   private hasInitializedChat: boolean = false;
+  isAdmin: boolean = false;
 
   constructor(
-    public projectStatusService: ProjectStatusService
+    public projectStatusService: ProjectStatusService,
+    private projectService: ProjectService,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
+    this.isAdmin = this.authService.getUserId() === ADMIN_USER_ID;
     this.applyFilters();
     if (!this.hasInitializedChat && this.filteredProjects.length > 0) {
       this.selectProject(this.filteredProjects[0]);
@@ -53,10 +59,24 @@ export class ProjectComponent implements OnInit {
     }
   }
 
-  updateProjectStatus(newStatus: ProjectStatus) {
+  async updateProjectStatus(newStatus: ProjectStatus) {
     if (this.selectedProject) {
-      this.selectedProject.status = newStatus;
-      // Here you would typically call your API to update the project status
+      const oldStatus = this.selectedProject.status;
+      try {
+        // Optimistic update: Update UI immediately
+
+        this.selectedProject.status = newStatus;
+        // Call API to persist the change
+        await this.projectService.updateProjectStatus(this.selectedProject._id, newStatus).toPromise();
+        
+        // Refresh the filtered projects to reflect the new status
+        this.applyFilters();
+      } catch (error) {
+        // Revert optimistic update if API call fails
+        this.selectedProject.status = oldStatus;
+        console.error('Failed to update project status:', error);
+        // TODO: Show error notification to user
+      }
     }
   }
 

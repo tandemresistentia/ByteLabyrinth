@@ -90,7 +90,6 @@ export class DashboardComponent implements OnInit {
       .subscribe({
         next: (projects) => {
           this.projects = projects;
-          console.log(projects);
           this.projects.sort((a,b) =>
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
           );

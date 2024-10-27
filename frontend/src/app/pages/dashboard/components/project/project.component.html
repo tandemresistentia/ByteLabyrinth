@@ -45,13 +45,23 @@
   <div class="project-details" *ngIf="selectedProject">
     <div class="project-detail-upper">
       <div class="project-detail-upper-left">
-      <h2>{{ selectedProject.name }}</h2>
-      <p>Created on: {{ selectedProject.createdAt | date }}</p>
-    </div>
-      <app-project-status-selector
-      [currentStatus]="selectedProject.status"
-      (statusChange)="updateProjectStatus($event)">
-    </app-project-status-selector>
+        <h2>{{ selectedProject.name }}</h2>
+        <p>Created on: {{ selectedProject.createdAt | date }}</p>
+      </div>
+      <!-- Show dropdown for admin, status chip for regular users -->
+      <ng-container *ngIf="isAdmin; else regularUserStatus">
+        <app-project-status-selector
+          [currentStatus]="selectedProject.status"
+          (statusChange)="updateProjectStatus($event)">
+        </app-project-status-selector>
+      </ng-container>
+      <ng-template #regularUserStatus>
+        <mat-chip-listbox aria-label="Project status">
+          <mat-chip [color]="getStatusColor(selectedProject.status)" selected>
+            {{ selectedProject.status }}
+          </mat-chip>
+        </mat-chip-listbox>
+      </ng-template>
     </div>
     
     <!-- Chat Section -->

@@ -1,8 +1,7 @@
 const Chat = require('../models/Chat');
 const Project = require('../models/Project');
 const mongoose = require('mongoose');
-
-const ADMIN_USER_ID = '671d191ddff639d00bb44512';
+const { ADMIN_USER_ID} = require('../models/constants');
 
 exports.getMessages = async (req, res) => {
   try {

@@ -66,7 +66,6 @@ export class ChatService {
 
   private setupSocketListeners(resolve: () => void, reject: (error: any) => void) {
     this.socket.on('connect', () => {
-      console.log('Socket connected successfully');
       this.connectionStatus.next(true);
       // Rejoin current project chat if exists
       if (this.currentProjectId) {
@@ -76,7 +75,6 @@ export class ChatService {
     });
 
     this.socket.on('disconnect', () => {
-      console.log('Socket disconnected');
       this.connectionStatus.next(false);
     });
 
@@ -118,7 +116,6 @@ export class ChatService {
   getMessages(projectId: string): Observable<any[]> {
     return from(this.ensureConnection()).pipe(
       switchMap(() => {
-        console.log('Connection ensured, fetching messages for project:', projectId);
         return this.http.get<any[]>(
           API_ROUTES.CHAT.GET_MESSAGES.replace(':projectId', projectId),
           {

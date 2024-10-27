@@ -1,7 +1,7 @@
 const Project = require('../models/Project');
 const Chat = require('../models/Chat');
 const mongoose = require('mongoose');
-const ADMIN_USER_ID = '671d191ddff639d00bb44512';
+const {PROJECT_STATUSES, ADMIN_USER_ID} = require('../models/constants');
 
 exports.createProject = async (req, res) => {
   try {
@@ -67,6 +67,42 @@ exports.getUserProjects = async (req, res) => {
     console.error('Error fetching user projects:', error);
     res.status(500).json({ 
       message: 'Error fetching user projects', 
+      error: error.message 
+    });
+  }
+};
+
+exports.updateProjectStatus = async (req, res) => {
+  try {
+    const { projectId } = req.params;
+    const { status } = req.body;
+    const requestingUserId = req.user.id;
+
+    // Verify project exists and user has permission
+    const project = await Project.findById(projectId);
+    if (!project) {
+      return res.status(404).json({ message: 'Project not found' });
+    }
+
+    // Only allow project creator or admin to update status
+    if (requestingUserId !== ADMIN_USER_ID) {
+      return res.status(403).json({ message: 'Not authorized to update project status' });
+    }
+
+    // Validate status is allowed
+    if (!PROJECT_STATUSES.includes(status)) {
+      return res.status(400).json({ message: 'Invalid status value' });
+    }
+
+    // Update the project status
+    project.status = status;
+    await project.save();
+
+    res.json({ message: 'Project status updated successfully', project });
+  } catch (error) {
+    console.error('Error updating project status:', error);
+    res.status(500).json({ 
+      message: 'Error updating project status', 
       error: error.message 
     });
   }
