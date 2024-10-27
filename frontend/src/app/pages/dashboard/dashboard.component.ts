@@ -86,11 +86,11 @@ export class DashboardComponent implements OnInit {
     this.http.get<any[]>(url, { headers })
       .pipe(
         timeout(10000),  // 10 seconds timeout
-        catchError(this.handleError)
       )
       .subscribe({
         next: (projects) => {
           this.projects = projects;
+          console.log(projects);
           this.projects.sort((a,b) =>
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
           );
@@ -106,30 +106,5 @@ export class DashboardComponent implements OnInit {
           this.loading = false;
         }
       });
-  }
-
-  private handleError = (error: HttpErrorResponse) => {
-    let errorMessage = '';
-    if (error.error instanceof ErrorEvent) {
-      // Client-side error
-      errorMessage = `Error: ${error.error.message}`;
-    } else {
-      // Server-side error
-      switch (error.status) {
-        case 401:
-          errorMessage = 'Authentication failed. Please log in again.';
-          this.authService.logout();  // Assuming you have a logout method
-          break;
-        case 404:
-          errorMessage = 'No projects found.';
-          break;
-        case 0:
-          errorMessage = 'Unable to connect to the server. Please check your internet connection.';
-          break;
-        default:
-          errorMessage = `Error fetching projects. Please try again later. (Status: ${error.status})`;
-      }
-    }
-    return throwError(() => new Error(errorMessage));
   }
 }
