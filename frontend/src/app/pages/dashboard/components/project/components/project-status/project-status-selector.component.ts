@@ -2,7 +2,6 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { MatChipsModule } from '@angular/material/chips';
 import { ProjectStatus } from './project-status.enum';
 import { ProjectStatusService } from './project-status.service';
 
@@ -14,10 +13,9 @@ import { ProjectStatusService } from './project-status.service';
       <mat-select [(value)]="currentStatus" (selectionChange)="onStatusChange($event.value)">
         <mat-option *ngFor="let status of statuses" [value]="status">
           <div class="status-option">
-            {{ status }}
-            <mat-chip [color]="getStatusColor(status)" selected>
+            <div class="status-badge" [ngStyle]="statusService.getStatusStyles(status)">
               {{ status }}
-            </mat-chip>
+            </div>
           </div>
         </mat-option>
       </mat-select>
@@ -27,22 +25,44 @@ import { ProjectStatusService } from './project-status.service';
     .status-selector {
       width: 100%;
     }
+    
     .status-option {
       display: flex;
-      justify-content: space-between;
       align-items: center;
     }
-    mat-chip {
-      min-height: 24px;
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 12px;
+      border-radius: 16px;
       font-size: 12px;
+      font-weight: 500;
+      line-height: 1.2;
+      white-space: nowrap;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      transition: all 0.2s ease;
+      width: 100%;
+    }
+
+    .status-option:hover .status-badge {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    ::ng-deep .mat-mdc-select-value {
+      .status-badge {
+        margin-top: 4px;
+        margin-bottom: 4px;
+      }
     }
   `],
   standalone: true,
   imports: [
     CommonModule,
     MatFormFieldModule,
-    MatSelectModule,
-    MatChipsModule
+    MatSelectModule
   ]
 })
 export class ProjectStatusSelectorComponent {
@@ -51,11 +71,7 @@ export class ProjectStatusSelectorComponent {
 
   statuses = Object.values(ProjectStatus);
 
-  constructor(private statusService: ProjectStatusService) {}
-
-  getStatusColor(status: ProjectStatus): string {
-    return this.statusService.getStatusColor(status);
-  }
+  constructor(public statusService: ProjectStatusService) {} // Changed to public
 
   onStatusChange(status: ProjectStatus): void {
     this.statusChange.emit(status);

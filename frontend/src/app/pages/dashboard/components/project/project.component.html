@@ -10,15 +10,15 @@
         <mat-label>Filter by status</mat-label>
         <mat-select [(ngModel)]="statusFilter" (selectionChange)="applyFilters()">
           <mat-option value="All">All</mat-option>
-          <mat-option value="Pending">Pending</mat-option>
-          <mat-option value="Approved">Approved</mat-option>
-          <mat-option value="In Progress">In Progress</mat-option>
-          <mat-option value="Under Review">Under Review</mat-option>
-          <mat-option value="Completed">Completed</mat-option>
-          <mat-option value="On Hold">On Hold</mat-option>
+          <mat-option *ngFor="let status of projectStatuses" [value]="status">
+            <div class="status-badge" [ngStyle]="projectStatusService.getStatusStyles(status)">
+              {{ status }}
+            </div>
+          </mat-option>
         </mat-select>
       </mat-form-field>
     </div>
+    
     <div class="project-cards">
       <mat-card *ngFor="let project of filteredProjects" 
                 (click)="selectProject(project)" 
@@ -29,11 +29,9 @@
           <mat-card-subtitle>
             Created on: {{ project.createdAt | date }}
           </mat-card-subtitle>
-          <mat-chip-listbox aria-label="Project status">
-            <mat-chip [color]="getStatusColor(project.status)" selected>
-              {{ project.status }}
-            </mat-chip>
-          </mat-chip-listbox>
+          <div class="status-badge" [ngStyle]="projectStatusService.getStatusStyles(project.status)">
+            {{ project.status }}
+          </div>
         </mat-card-header>
         <mat-card-content>
           <p class="truncate">{{ project.description }}</p>
@@ -48,7 +46,6 @@
         <h2>{{ selectedProject.name }}</h2>
         <p>Created on: {{ selectedProject.createdAt | date }}</p>
       </div>
-      <!-- Show dropdown for admin, status chip for regular users -->
       <ng-container *ngIf="isAdmin; else regularUserStatus">
         <app-project-status-selector
           [currentStatus]="selectedProject.status"
@@ -56,15 +53,12 @@
         </app-project-status-selector>
       </ng-container>
       <ng-template #regularUserStatus>
-        <mat-chip-listbox aria-label="Project status">
-          <mat-chip [color]="getStatusColor(selectedProject.status)" selected>
-            {{ selectedProject.status }}
-          </mat-chip>
-        </mat-chip-listbox>
+        <div class="status-badge" [ngStyle]="projectStatusService.getStatusStyles(selectedProject.status)">
+          {{ selectedProject.status }}
+        </div>
       </ng-template>
     </div>
     
-    <!-- Chat Section -->
     <app-chat [projectId]="selectedProject._id"></app-chat>
   </div>
 </div>

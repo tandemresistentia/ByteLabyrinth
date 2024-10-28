@@ -139,3 +139,34 @@
     flex-direction: column;
   }
 }
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+  user-select: none;
+  
+  // Optional subtle shadow
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+// If you need hover effects
+.status-badge:hover {
+  filter: brightness(0.98);
+}
+
+// Optional animation
+.status-badge {
+  transition: all 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+}
