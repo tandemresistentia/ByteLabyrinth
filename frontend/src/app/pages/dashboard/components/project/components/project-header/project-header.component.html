@@ -41,26 +41,11 @@
           <h3>Description</h3>
           <p>{{ project?.description }}</p>
         </div>
-        
-        <div class="info-box">
-          <h3>Client</h3>
-          <p><strong>Name:</strong> {{ project?.client?.name }}</p>
-          <p><strong>Email:</strong> {{ project?.client?.email }}</p>
-        </div>
   
         <div class="info-box">
           <h3>Timeline</h3>
           <p><strong>Deadline:</strong> {{ project?.deadline | date }}</p>
           <p><strong>Status:</strong> {{ project?.progress }}% Complete</p>
-        </div>
-  
-        <div class="info-box">
-          <h3>Team</h3>
-          <div class="team-members">
-            <div class="member" *ngFor="let member of project?.team">
-              {{ member.name }} - {{ member.role }}
-            </div>
-          </div>
         </div>
       </div>
     </div>
