@@ -1,174 +1,199 @@
-/* Project Container Layout */
+/* Base Layout */
 .project-container {
   display: flex;
-  height: calc(100vh - 64px); /* Adjust based on your header height */
-  padding: 20px;
-  max-height: 84vh;
-    overflow-y: hidden;
+  height: calc(90vh - 64px);
+  padding: 16px 24px;
+  gap: 24px;
+  background-color: #faf9f7;
 }
 
+/* Project List */
 .project-list {
   width: 30%;
-  max-width: 30%;
+  max-width: 400px;
   overflow-y: auto;
-  margin-right: 20px;
+  padding-right: 12px;
   
-  &.full-width {
-    width: 100%;
-    max-width: 100%;
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background-color: #e0e0e0;
+    border-radius: 4px;
   }
 }
 
-.project-details {
-  width: 70%;
-  max-width: 70%;
-  max-height: 85vh;
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-/* Filters Section */
+/* Search and Filters */
 .filters {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   margin-bottom: 20px;
   
   mat-form-field {
     width: 100%;
+    
+    ::ng-deep .mat-form-field-wrapper {
+      margin-bottom: -1.25em;
+    }
   }
 }
 
 /* Project Cards */
-.project-cards {
-  gap: 20px;
-  display: flex;
-  flex-direction: column;
-  max-width: 600px;
-}
-
 .project-card {
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+  background: white;
+  border: 1px solid #f0f0f0;
   border-radius: 8px;
-  overflow: hidden;
-  position: relative;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
   
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-color: #e6e6e6;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
   }
   
   &.selected {
-    border: 2px solid var(--mat-primary-500);
+    border-color: rgba(233, 30, 99, 0.3);
+    background-color: rgba(233, 30, 99, 0.02);
+  }
+
+  mat-card-header {
+    padding: 16px 16px 8px;
+    display: flex;
+    justify-content: space-between;
   }
 
   mat-card-content {
-    padding: 16px;
+    padding: 0 16px 16px;
+    color: #666;
   }
 }
 
 /* Project Details */
-.project-detail-upper {
-  margin-left: 40px;
-  margin-right: 20px;
-  border-bottom: aliceblue 1px solid;
+.project-details {
+  flex: 1;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #f0f0f0;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+}
+
+.project-detail-upper {
+  padding: 20px 24px;
+  border-bottom: 1px solid #f5f5f5;
+  display: flex;
   justify-content: space-between;
   align-items: center;
-
+  
   h2 {
-    margin-bottom: 8px;
+    margin: 0;
+    font-size: 1.25rem;
+    color: #333;
   }
   
   p {
-    margin-bottom: 16px;
+    margin: 4px 0 0;
+    color: #666;
+    font-size: 0.9rem;
   }
 }
 
-.truncate {
-  word-wrap: break-word;
-  max-width: 90%;
-  overflow: hidden;
-}
-
-.project-description {
-  word-wrap: break-word;
-  max-width: 70%;
-}
-.card-class-header{
-  display: flex;
-  justify-content: space-between;
-}
-
-
-/* Status Specific Styles */
-.status-option {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  
-  mat-chip {
-    margin-left: 8px;
-  }
-}
-
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-  .project-container {
-    flex-direction: column;
-  }
-  
-  .project-list, 
-  .project-details {
-    width: 100%;
-    max-width: 100%;
-  }
-  
-  .project-list {
-    margin-right: 0;
-    margin-bottom: 20px;
-  }
-  
-  .filters {
-    flex-direction: column;
-  }
-}
-.filter-by-status{
-  margin-top: 2px;
-}
+/* Status Badge */
 .status-badge {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  padding: 12px;
+  padding: 6px 12px;
   border-radius: 16px;
-  font-size: 12px;
+  font-size: 0.813rem;
   font-weight: 500;
-  line-height: 1.2;
-  white-space: nowrap;
-  user-select: none;
+  background: #fef6f7;
+  color: #e91e63;
   
-  // Optional subtle shadow
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  &[data-status="In Progress"] {
+    background: #fef6f7;
+    color: #e91e63;
+  }
+  
+  &[data-status="Completed"] {
+    background: #f0f9f4;
+    color: #2e7d32;
+  }
+  
+  &[data-status="Pending"] {
+    background: #fff8e1;
+    color: #f57c00;
+  }
 }
 
-// If you need hover effects
-.status-badge:hover {
-  filter: brightness(0.98);
+/* Chat Section */
+.chat-container {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  
+  .message {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+    
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #e91e63;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.875rem;
+    }
+    
+    .content {
+      background: #f8f9fa;
+      padding: 12px 16px;
+      border-radius: 12px;
+      max-width: 80%;
+    }
+    
+    .timestamp {
+      font-size: 0.75rem;
+      color: #999;
+      margin-top: 4px;
+    }
+  }
 }
 
-// Optional animation
-.status-badge {
-  transition: all 0.2s ease;
+/* Message Input */
+.message-input {
+  padding: 16px;
+  border-top: 1px solid #f5f5f5;
   
-  &:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  textarea {
+    width: 100%;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 12px;
+    resize: none;
+    
+    &:focus {
+      outline: none;
+      border-color: #e91e63;
+    }
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .project-container {
+    flex-direction: column;
+    padding: 12px;
+  }
+  
+  .project-list,
+  .project-details {
+    width: 100%;
+    max-width: 100%;
   }
 }
