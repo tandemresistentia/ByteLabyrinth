@@ -15,6 +15,7 @@ import { ChatComponent } from './components/chat/chat.component';
 import { ProjectService } from './project.service';
 import { AuthService } from '../../../login/components/auth.service';
 import { PaymentComponent } from './components/payment/payment.component';
+import { ProjectHeaderComponent } from './components/project-header/project-header.component';
 
 const { ADMIN_USER_ID } = require('../../../../../../../backend/models/constants.js');
 
@@ -35,7 +36,8 @@ const { ADMIN_USER_ID } = require('../../../../../../../backend/models/constants
     MatIconModule,
     ProjectStatusSelectorComponent,
     ChatComponent,
-    PaymentComponent
+    PaymentComponent,
+    ProjectHeaderComponent
 ]
 })
 export class ProjectComponent implements OnInit {

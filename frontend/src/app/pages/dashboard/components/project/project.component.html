@@ -41,26 +41,11 @@
   </div>
   
   <div class="project-details" *ngIf="selectedProject">
-    <div class="project-detail-upper">
-      <div class="project-detail-upper-left">
-        <h2>{{ selectedProject.name }}</h2>
-        <p>Created on: {{ selectedProject.createdAt | date }}</p>
-      </div>
-      <div class="project-payment" *ngIf="selectedProject.status === 'Approved'">
-      <app-payment [projectId]="selectedProject._id"></app-payment>
-      </div>
-      <ng-container *ngIf="isAdmin; else regularUserStatus">
-        <app-project-status-selector
-          [currentStatus]="selectedProject.status"
-          (statusChange)="updateProjectStatus($event)">
-        </app-project-status-selector>
-      </ng-container>
-      <ng-template #regularUserStatus>
-        <div class="status-badge" [ngStyle]="projectStatusService.getStatusStyles(selectedProject.status)">
-          {{ selectedProject.status }}
-        </div>
-      </ng-template>
-    </div>
+      <app-project-header
+      [project]="selectedProject"
+      [isAdmin]="isAdmin"
+      (statusChange)="updateProjectStatus($event)">
+    </app-project-header>
     
     <app-chat [projectId]="selectedProject._id"></app-chat>
   </div>
