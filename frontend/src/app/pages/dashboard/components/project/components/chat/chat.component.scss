@@ -24,7 +24,9 @@
     padding: 20px;
     max-height: 55vh;
   }
-  
+  .chat-error.ng-star-inserted {
+    margin-left: 30px;
+}
   .message {
     display: flex;
     margin-bottom: 15px;

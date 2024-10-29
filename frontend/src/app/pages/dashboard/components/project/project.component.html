@@ -7,7 +7,7 @@
         <mat-icon matSuffix>search</mat-icon>
       </mat-form-field>
       <mat-form-field appearance="outline">
-        <mat-label>Filter by status</mat-label>
+        <mat-label class="filter-by-status">Filter by status</mat-label>
         <mat-select [(ngModel)]="statusFilter" (selectionChange)="applyFilters()">
           <mat-option value="All">All</mat-option>
           <mat-option *ngFor="let status of projectStatuses" [value]="status">
@@ -45,6 +45,9 @@
       <div class="project-detail-upper-left">
         <h2>{{ selectedProject.name }}</h2>
         <p>Created on: {{ selectedProject.createdAt | date }}</p>
+      </div>
+      <div class="project-payment" *ngIf="selectedProject.status === 'Approved'">
+      <app-payment [projectId]="selectedProject._id"></app-payment>
       </div>
       <ng-container *ngIf="isAdmin; else regularUserStatus">
         <app-project-status-selector

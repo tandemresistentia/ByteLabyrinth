@@ -14,6 +14,7 @@ import { ProjectStatusSelectorComponent } from './components/project-status/proj
 import { ChatComponent } from './components/chat/chat.component';
 import { ProjectService } from './project.service';
 import { AuthService } from '../../../login/components/auth.service';
+import { PaymentComponent } from './components/payment/payment.component';
 
 const { ADMIN_USER_ID } = require('../../../../../../../backend/models/constants.js');
 
@@ -33,8 +34,9 @@ const { ADMIN_USER_ID } = require('../../../../../../../backend/models/constants
     MatButtonModule,
     MatIconModule,
     ProjectStatusSelectorComponent,
-    ChatComponent
-  ]
+    ChatComponent,
+    PaymentComponent
+]
 })
 export class ProjectComponent implements OnInit {
   @Input() projects: any[] = [];

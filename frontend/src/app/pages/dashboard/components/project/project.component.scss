@@ -139,12 +139,14 @@
     flex-direction: column;
   }
 }
-
+.filter-by-status{
+  margin-top: 2px;
+}
 .status-badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 4px 12px;
+  padding: 12px;
   border-radius: 16px;
   font-size: 12px;
   font-weight: 500;
