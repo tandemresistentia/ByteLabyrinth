@@ -1,57 +1,67 @@
-<div class="project-header-container">
-  <header class="project-header" [class.expanded]="isExpanded">
-    <div class="header-content">
-      <div class="header-left">
-        <div class="title-section">
+<div class="project-detail-container">
+    <!-- Main Header -->
+    <div class="project-header">
+      <div class="header-content">
+        <div class="header-left">
           <h2>{{ project?.name }}</h2>
           <p class="subtitle">Created on: {{ project?.createdAt | date }}</p>
         </div>
-      </div>
-
-      <div class="header-actions">
-        <div class="project-payment" *ngIf="project?.status === 'Approved'">
-          <app-payment [projectId]="project?._id"></app-payment>
-        </div>
-
-        <ng-container *ngIf="isAdmin; else regularUserStatus">
-          <app-project-status-selector
-            [currentStatus]="project?.status"
-            (statusChange)="onStatusChange($event)">
-          </app-project-status-selector>
-        </ng-container>
-
-        <ng-template #regularUserStatus>
-          <div class="status-badge" [ngStyle]="projectStatusService.getStatusStyles(project?.status)">
-            {{ project?.status }}
+  
+        <div class="header-right">
+          <div class="project-payment" *ngIf="project?.status === 'Approved'">
+            <app-payment [projectId]="project?._id"></app-payment>
           </div>
-        </ng-template>
+  
+          <ng-container *ngIf="isAdmin; else regularUserStatus">
+            <app-project-status-selector
+              [currentStatus]="project?.status"
+              (statusChange)="onStatusChange($event)">
+            </app-project-status-selector>
+          </ng-container>
+  
+          <ng-template #regularUserStatus>
+            <div class="status-badge" [ngStyle]="projectStatusService.getStatusStyles(project?.status)">
+              {{ project?.status }}
+            </div>
+          </ng-template>
+        </div>
       </div>
+      
+      <button class="expand-button" (click)="toggleExpand($event)">
+        <svg [class.rotated]="isExpanded" viewBox="0 0 24 24" width="16" height="16">
+          <path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
     </div>
-    
-    <button class="expand-toggle" (click)="toggleExpand($event)">
-      <svg [class.rotated]="isExpanded" viewBox="0 0 24 24" width="24" height="24">
-        <path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-      </svg>
-    </button>
-  </header>
-
-  <div class="expanded-content" [@expandCollapse]="isExpanded ? 'expanded' : 'collapsed'">
-    <div class="content-wrapper">
-      <div class="messages-container">
-        <div class="message" *ngFor="let message of project?.messages">
-          <div class="message-header">
-            <span class="username">{{ message.username }}</span>
-            <span class="timestamp">{{ message.timestamp | date:'short' }}</span>
-          </div>
-          <div class="message-content">
-            {{ message.content }}
+  
+    <!-- Expandable Content -->
+    <div class="expandable-content" [@expandCollapse]="isExpanded ? 'expanded' : 'collapsed'">
+      <div class="content-grid">
+        <div class="info-box">
+          <h3>Description</h3>
+          <p>{{ project?.description }}</p>
+        </div>
+        
+        <div class="info-box">
+          <h3>Client</h3>
+          <p><strong>Name:</strong> {{ project?.client?.name }}</p>
+          <p><strong>Email:</strong> {{ project?.client?.email }}</p>
+        </div>
+  
+        <div class="info-box">
+          <h3>Timeline</h3>
+          <p><strong>Deadline:</strong> {{ project?.deadline | date }}</p>
+          <p><strong>Status:</strong> {{ project?.progress }}% Complete</p>
+        </div>
+  
+        <div class="info-box">
+          <h3>Team</h3>
+          <div class="team-members">
+            <div class="member" *ngFor="let member of project?.team">
+              {{ member.name }} - {{ member.role }}
+            </div>
           </div>
         </div>
-      </div>
-      <div class="message-input">
-        <input type="text" placeholder="Type a message..." />
-        <button class="send-button">Send</button>
       </div>
     </div>
   </div>
-</div>
