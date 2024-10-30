@@ -59,7 +59,7 @@ export class ProjectSpecificationPopupComponent implements OnInit {
     if (this.projectName && this.projectDescription) {
       const projectData = {
         name: this.projectName,
-        description: this.projectDescription
+        description: this.projectDescription,
       };
 
       const headers = new HttpHeaders({

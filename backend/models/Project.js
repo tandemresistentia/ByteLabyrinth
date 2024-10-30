@@ -24,6 +24,14 @@ const projectSchema = new mongoose.Schema({
     type: String,
     enum: PROJECT_STATUSES,
     default: 'Pending'
+  },
+  deadline: {
+    type: Date,
+    default: function() {
+      const date = new Date();
+      date.setDate(date.getDate() + 7);
+      return date;
+    }
   }
 });
 

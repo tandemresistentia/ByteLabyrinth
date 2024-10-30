@@ -1,0 +1,45 @@
+::-webkit-scrollbar {
+    width: 2px;  /* Ultra thin width */
+    height: 2px; /* Same for horizontal scrollbar */
+    background: transparent;
+    border-radius: 10px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: rgba(155, 155, 155, 0.3);
+    border-radius: 1px;
+    transition: all 0.2s ease;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(155, 155, 155, 0.5);
+    width: 4px;
+  }
+  
+  /* Hide scrollbar corner */
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+  
+  /* Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(155, 155, 155, 0.3) transparent;
+  }
+  
+  /* Optional: Show slightly more visible scrollbar on hover */
+  .hover-scroll {
+    &:hover {
+      &::-webkit-scrollbar {
+        width: 4px;
+      }
+      
+      &::-webkit-scrollbar-thumb {
+        background: rgba(155, 155, 155, 0.5);
+      }
+    }
+  }

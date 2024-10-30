@@ -11,7 +11,7 @@ exports.createProject = async (req, res) => {
     const newProject = new Project({
       name,
       description,
-      createdBy: userId
+      createdBy: userId,
     });
 
     const savedProject = await newProject.save();

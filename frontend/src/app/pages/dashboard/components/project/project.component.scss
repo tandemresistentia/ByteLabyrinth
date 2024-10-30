@@ -47,6 +47,8 @@
   margin-bottom: 12px;
   cursor: pointer;
   transition: border-color 0.2s, box-shadow 0.2s;
+  max-height: 30vh;
+  overflow: auto;
   
   &:hover {
     border-color: #e6e6e6;
