@@ -1,6 +1,8 @@
 const Project = require('../models/Project');
 const Chat = require('../models/Chat');
 const mongoose = require('mongoose');
+const fs = require('fs');
+
 const {PROJECT_STATUSES, ADMIN_USER_ID} = require('../models/constants');
 
 exports.createProject = async (req, res) => {
@@ -84,11 +86,6 @@ exports.updateProjectStatus = async (req, res) => {
       return res.status(404).json({ message: 'Project not found' });
     }
 
-    // Only allow project creator or admin to update status
-    if (requestingUserId !== ADMIN_USER_ID) {
-      return res.status(403).json({ message: 'Not authorized to update project status' });
-    }
-
     // Validate status is allowed
     if (!PROJECT_STATUSES.includes(status)) {
       return res.status(400).json({ message: 'Invalid status value' });
@@ -104,6 +101,117 @@ exports.updateProjectStatus = async (req, res) => {
     res.status(500).json({ 
       message: 'Error updating project status', 
       error: error.message 
+    });
+  }
+};
+
+exports.uploadProjectFile = async (req, res) => {
+  try {
+    const { projectId } = req.params;
+    const requestingUserId = req.user.id;
+
+    // Check if user is admin
+    if (requestingUserId !== ADMIN_USER_ID) {
+      return res.status(403).json({ 
+        message: 'Only admins can upload project files' 
+      });
+    }
+
+    // Verify project exists
+    const project = await Project.findById(projectId);
+    if (!project) {
+      // Remove uploaded file if project not found
+      if (req.file) {
+        await fs.promises.unlink(req.file.path);
+      }
+      return res.status(404).json({ message: 'Project not found' });
+    }
+
+    // Delete old file if it exists
+    if (project.file && project.file.path) {
+      try {
+        await fs.promises.unlink(project.file.path);
+      } catch (error) {
+        console.error('Error deleting old file:', error);
+      }
+    }
+
+    // Update project with new file information
+    project.file = {
+      fileName: req.file.originalname,
+      fileSize: req.file.size,
+      uploadedAt: new Date(),
+      path: req.file.path,
+      uploadedBy: requestingUserId
+    };
+
+    await project.save();
+
+    res.json({
+      message: 'File uploaded successfully',
+      file: {
+        fileName: project.file.fileName,
+        fileSize: project.file.fileSize,
+        uploadedAt: project.file.uploadedAt
+      }
+    });
+  } catch (error) {
+    // Clean up uploaded file in case of error
+    if (req.file) {
+      try {
+        await fs.promises.unlink(req.file.path);
+      } catch (unlinkError) {
+        console.error('Error deleting file after failed upload:', unlinkError);
+      }
+    }
+
+    console.error('Error uploading file:', error);
+    res.status(500).json({
+      message: 'Error uploading file',
+      error: error.message
+    });
+  }
+};
+
+exports.downloadProjectFile = async (req, res) => {
+  try {
+    const { projectId } = req.params;
+    const requestingUserId = req.user.id;
+
+    // Verify project exists
+    const project = await Project.findById(projectId);
+    if (!project) {
+      return res.status(404).json({ message: 'Project not found' });
+    }
+
+    // Check if user has permission to download
+    const hasPermission = requestingUserId === ADMIN_USER_ID || 
+                         project.createdBy.toString() === requestingUserId;
+    if (!hasPermission) {
+      return res.status(403).json({ 
+        message: 'You do not have permission to download this file' 
+      });
+    }
+
+    // Check if project is completed (for non-admin users)
+    if (requestingUserId !== ADMIN_USER_ID && project.status !== 'Completed') {
+      return res.status(403).json({ 
+        message: 'File is only available after project completion' 
+      });
+    }
+
+    // Verify file exists
+    if (!project.file || !project.file.path) {
+      return res.status(404).json({ message: 'No file available for this project' });
+    }
+
+    // Send file
+    res.download(project.file.path, project.file.fileName);
+  } catch (error) {
+    console.error('Error downloading file:', error);
+    res.status(500).json({
+      message: 'Error downloading file',
+      error: error.message
     });
   }
 };

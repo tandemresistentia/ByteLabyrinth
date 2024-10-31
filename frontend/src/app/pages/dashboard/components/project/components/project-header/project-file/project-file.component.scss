@@ -1,0 +1,136 @@
+.project-files {
+    padding: 1.5rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  
+  .project-files-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    
+    h3 {
+        margin: 0 0 0.75rem 0;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #374151;
+    }
+  }
+  
+  .upload-section {
+    .upload-button {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      
+      mat-icon {
+        font-size: 20px;
+      }
+    }
+  }
+  
+  .upload-progress {
+    margin: 1rem 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    
+    mat-progress-bar {
+      flex: 1;
+    }
+    
+    span {
+      min-width: 48px;
+      text-align: right;
+      color: #666;
+    }
+  }
+  
+  .upload-error {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 1rem 0;
+    padding: 0.75rem;
+    border-radius: 4px;
+    background: #ffebee;
+    color: #d32f2f;
+    
+    mat-icon {
+      font-size: 20px;
+    }
+  }
+  
+  .delivery-file {
+    .file-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: #f5f5f5;
+      border-radius: 4px;
+      transition: background-color 0.2s ease;
+      
+      &.downloadable {
+        background: #e3f2fd;
+        
+        &:hover {
+          background: #bbdefb;
+        }
+      }
+      
+      mat-icon {
+        color: #666;
+        font-size: 24px;
+      }
+      
+      .file-info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        
+        .file-name {
+          font-weight: 500;
+          color: #333;
+        }
+        
+        .file-meta {
+          font-size: 0.875rem;
+          color: #666;
+          margin-top: 0.25rem;
+        }
+      }
+      
+      .file-status {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #666;
+        font-size: 0.875rem;
+        
+        mat-icon {
+          font-size: 18px;
+        }
+      }
+    }
+  }
+  
+  .no-files {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    color: #666;
+    
+    mat-icon {
+      font-size: 48px;
+      opacity: 0.5;
+    }
+    
+    span {
+      font-size: 0.9rem;
+    }
+  }

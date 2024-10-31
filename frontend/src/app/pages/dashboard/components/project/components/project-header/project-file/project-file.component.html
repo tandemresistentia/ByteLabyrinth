@@ -1,0 +1,77 @@
+<div class="project-files">
+    <div class="project-files-header">
+      <h3>Project Files</h3>
+      
+      <!-- Admin Upload Section -->
+      <div class="upload-section" *ngIf="isAdmin">
+        <input
+          type="file"
+          #fileInput
+          accept=".zip"
+          style="display: none"
+          (change)="onFileSelected($event)"
+        >
+        <button 
+          mat-raised-button 
+          color="primary"
+          [disabled]="isUploading"
+          (click)="fileInput.click()"
+          class="upload-button"
+        >
+          <mat-icon>upload</mat-icon>
+          Upload ZIP File
+        </button>
+      </div>
+    </div>
+    
+    <!-- Upload Progress (Admin Only) -->
+    <div class="upload-progress" *ngIf="isAdmin && isUploading">
+      <mat-progress-bar 
+        mode="determinate" 
+        [value]="uploadProgress">
+      </mat-progress-bar>
+      <span>{{ uploadProgress }}%</span>
+    </div>
+    
+    <!-- Upload Error (Admin Only) -->
+    <div class="upload-error" *ngIf="isAdmin && uploadError">
+      <mat-icon>error</mat-icon>
+      {{ uploadError }}
+    </div>
+  
+    <!-- File Display (Both Admin and Non-Admin) -->
+    <div class="delivery-file" *ngIf="project?.file">
+      <div class="file-item" [class.downloadable]="canDownload">
+        <mat-icon>folder_zip</mat-icon>
+        <div class="file-info">
+          <span class="file-name">{{ project.file.fileName }}</span>
+          <span class="file-meta">
+            {{ formatFileSize(project.file.fileSize) }} • 
+            {{ project.file.uploadedAt | date:'short' }}
+          </span>
+        </div>
+        
+        <!-- Download Button (Only shown if canDownload is true) -->
+        <button 
+          mat-icon-button 
+          *ngIf="canDownload"
+          (click)="downloadFile($event)"
+          matTooltip="Download File"
+        >
+          <mat-icon>download</mat-icon>
+        </button>
+        
+        <!-- Status Indicator (When download is not available) -->
+        <div class="file-status" *ngIf="!canDownload">
+          <mat-icon>lock</mat-icon>
+          <span>Available after completion</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- No Files Message -->
+    <div class="no-files" *ngIf="!project?.file">
+      <mat-icon>folder_open</mat-icon>
+      <span>No files available</span>
+    </div>
+  </div>

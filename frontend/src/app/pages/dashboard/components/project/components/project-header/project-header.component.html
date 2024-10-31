@@ -8,6 +8,10 @@
       </div>
 
       <div class="header-right">
+        <div class="project-payment" *ngIf="project?.status === 'Approved'">
+          <app-payment [projectId]="project?._id"></app-payment>
+        </div>
+        
         <ng-container *ngIf="isAdmin; else regularUserStatus">
           <app-project-status-selector
             [currentStatus]="project?.status"
@@ -42,6 +46,7 @@
       <!-- Timeline Section -->
       <div class="info-box">
         <h3>Timeline</h3>
+        <div *ngIf="project?.status != 'Pending'">
         <p><strong>Deadline:</strong> {{ project?.deadline | date }}</p>
         <div class="progress-container">
           <div class="progress-bar">
@@ -50,21 +55,14 @@
           <span class="progress-text">{{ progressPercentage }}% Complete</span>
         </div>
       </div>
+      </div>
 
       <!-- Project Files Section -->
       <div class="info-box">
-        <h3>Project Files</h3>
-        <div class="files-list">
-          <div class="file-item" *ngFor="let file of project?.files">
-            <div class="file-icon">📄</div>
-            <div class="file-info">
-              <span class="file-name">{{ file.name }}</span>
-              <span class="file-meta">
-                {{ formatFileSize(file.size) }} • {{ file.uploadedAt | date:'short' }}
-              </span>
-            </div>
-          </div>
-        </div>
+        <app-project-file
+          [project]="project"
+          [isAdmin]="isAdmin"
+        ></app-project-file>
       </div>
     </div>
   </div>

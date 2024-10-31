@@ -32,6 +32,19 @@ const projectSchema = new mongoose.Schema({
       date.setDate(date.getDate() + 7);
       return date;
     }
+  },
+  file: {
+    fileName: String,
+    fileSize: Number,
+    uploadedAt: { 
+      type: Date, 
+      default: Date.now 
+    },
+    path: String,
+    uploadedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    }
   }
 });
 

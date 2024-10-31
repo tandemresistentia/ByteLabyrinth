@@ -1,12 +1,12 @@
 import { Component, HostListener, ElementRef, Renderer2, inject, ViewChild, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { LoginComponent } from '../../../pages/login/login.component';
 import { AuthService } from '../../../pages/login/components/auth.service';
-import { Subscription } from 'rxjs';
+import { Subscription, filter } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -27,25 +27,39 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private readonly SCROLL_THRESHOLD = 50;
   isHeaderVisible = true;
   isLoggedIn = false;
+  isHomePage = false;
 
+  private router = inject(Router);
   private authService = inject(AuthService);
   private cdr = inject(ChangeDetectorRef);
 
-  private authSubscription: Subscription | undefined;
+  private subscriptions = new Subscription();
 
   @ViewChild(LoginComponent) loginComponent!: LoginComponent;
 
   ngOnInit() {
-    this.authSubscription = this.authService.authToken$.subscribe(token => {
-      this.isLoggedIn = !!token;
-      this.cdr.detectChanges(); // Force change detection
-    });
-  }
+    this.subscriptions.add(
+      this.router.events.pipe(
+        filter(event => event instanceof NavigationEnd)
+      ).subscribe((event: any) => {
+        this.isHomePage = event.url === '/' || event.url === '/home';
+        this.cdr.detectChanges();
+      })
+    );
 
+    // Subscribe to auth changes
+    this.subscriptions.add(
+      this.authService.authToken$.subscribe(token => {
+        this.isLoggedIn = !!token;
+        this.cdr.detectChanges();
+      })
+    );
+    // Set initial home page state
+    this.isHomePage = this.router.url === '/' || this.router.url === '/home';
+  }
+  
   ngOnDestroy() {
-    if (this.authSubscription) {
-      this.authSubscription.unsubscribe();
-    }
+    this.subscriptions.unsubscribe();
   }
 
   @HostListener('window:scroll', [])

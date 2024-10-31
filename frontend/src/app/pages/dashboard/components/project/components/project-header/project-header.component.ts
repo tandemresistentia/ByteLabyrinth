@@ -1,10 +1,12 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProjectStatus } from '../project-status/project-status.enum';
 import { ProjectStatusService } from '../project-status/project-status.service';
 import { ProjectStatusSelectorComponent } from '../project-status/project-status-selector.component';
 import { PaymentComponent } from '../payment/payment.component';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { ProjectConstants } from '../../project-constants';
+import { ProjectFileComponent } from './project-file/project-file.component';
 
 @Component({
   selector: 'app-project-header',
@@ -12,7 +14,8 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
   imports: [
     CommonModule,
     ProjectStatusSelectorComponent,
-    PaymentComponent
+    PaymentComponent,
+    ProjectFileComponent
   ],
   templateUrl: './project-header.component.html',
   styleUrl: './project-header.component.scss',
@@ -46,6 +49,12 @@ export class ProjectHeaderComponent {
     this.calculateProgress();
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['project'] && !changes['project'].firstChange) {
+      this.calculateProgress();
+    }
+  }
+
   calculateProgress() {
     if (this.project?.deadline) {
       const start = new Date(this.project.createdAt).getTime();
@@ -75,11 +84,4 @@ export class ProjectHeaderComponent {
     this.isExpanded = !this.isExpanded;
   }
 
-  formatFileSize(bytes: number): string {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-  }
 }

@@ -11,11 +11,13 @@
       </a>
     </ng-container>
     <span class="spacer"></span>
-    <button mat-button (click)="scrollTo('hero')">Home</button>
-    <button mat-button (click)="scrollTo('pricing-plans')">Services</button>
-    <button mat-button (click)="scrollTo('development-process')">Our Process</button>
-    <button mat-button (click)="scrollTo('testimonials')">Testimonials</button>
-    <button mat-button (click)="scrollTo('why-choose-us')">Why Us</button>
+    <ng-container *ngIf="isHomePage">
+      <button mat-button (click)="scrollTo('hero')">Home</button>
+      <button mat-button (click)="scrollTo('pricing-plans')">Services</button>
+      <button mat-button (click)="scrollTo('development-process')">Our Process</button>
+      <button mat-button (click)="scrollTo('testimonials')">Testimonials</button>
+      <button mat-button (click)="scrollTo('why-choose-us')">Why Us</button>
+    </ng-container>
     <ng-container *ngIf="!isLoggedIn; else logoutButton">
       <a mat-raised-button color="primary" (click)="openLoginPopup()">Log in</a>
     </ng-container>

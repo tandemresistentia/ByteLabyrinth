@@ -4,6 +4,7 @@ const socketIo = require('socket.io');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./db');
+const path = require('path');
 
 // Route imports
 const authRoutes = require('./routes/auth');
@@ -37,6 +38,10 @@ app.set('io', io); // Make io available to routes
 app.use('/api/auth', authRoutes);
 app.use('/api', projectRoutes);  
 app.use('/api', chatRoutes);  
+
+
+// File routes
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Initialize socket event handlers
 chatController.handleSocketEvents(io);
