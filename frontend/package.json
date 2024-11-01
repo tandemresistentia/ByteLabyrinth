@@ -3,14 +3,10 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "node dist/frontend/server/main.js",
+    "start": "node server.js",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "dev:ssr": "ng run frontend:serve-ssr:development",
-    "serve:ssr": "node dist/frontend/server/main.js",
-    "build:ssr": "ng build",
-    "prerender": "ng run frontend:prerender"
+    "test": "ng test"
   },
   "private": true,
   "dependencies": {
