@@ -1,5 +1,5 @@
-# Build stage
-FROM node:18 as builder
+# Use Node.js as base
+FROM node:18
 
 # Set working directory
 WORKDIR /app
@@ -16,20 +16,11 @@ RUN npm install -g @angular/cli
 # Copy project files
 COPY . .
 
-# Build the app
-RUN ng build --configuration production
-
-# Serve stage
-FROM nginx:alpine
-
-# Copy built assets from builder stage
-COPY --from=builder /app/dist/frontend /usr/share/nginx/html
-
-# Copy nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Build SSR application
+RUN npm run build
 
 # Expose port
-EXPOSE 80
+EXPOSE 4000
 
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"]
+# The start command will come from railway.toml
+CMD ["npm", "start"]
