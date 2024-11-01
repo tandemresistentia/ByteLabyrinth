@@ -1,8 +1,9 @@
-[build]
+[
+build
+]
 builder = "DOCKERFILE"
 
-[deploy]
-startCommand = "npm start"
-healthcheckPath = "/"
-healthcheckTimeout = 100
-restartPolicyType = "ON_FAILURE"
+[
+deploy
+]
+startCommand = "node dist/frontend/server/main.server.mjs"

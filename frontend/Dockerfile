@@ -1,5 +1,5 @@
 # Use Node.js as base
-FROM node:18
+FROM node:20
 
 # Set working directory
 WORKDIR /app
@@ -16,11 +16,11 @@ RUN npm install -g @angular/cli
 # Copy project files
 COPY . .
 
-# Build SSR application with production configuration
+# Build the app
 RUN npm run build
 
 # Expose port
 EXPOSE 4000
 
-# Start the application
-CMD ["npm", "start"]
+# Start command will come from railway.toml
+CMD ["node", "dist/frontend/server/main.server.mjs"]
