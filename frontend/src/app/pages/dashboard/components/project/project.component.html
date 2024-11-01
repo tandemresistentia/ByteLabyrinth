@@ -7,11 +7,26 @@
         <mat-icon matSuffix>search</mat-icon>
       </mat-form-field>
       <mat-form-field appearance="outline">
-        <mat-label class="filter-by-status">Filter by status</mat-label>
+        <mat-label class="filter-by-status">
+          <mat-icon>filter_list</mat-icon>
+          Filter by status
+        </mat-label>
         <mat-select [(ngModel)]="statusFilter" (selectionChange)="applyFilters()">
-          <mat-option value="All">All</mat-option>
+          <mat-option value="All">
+            <mat-icon>all_inclusive</mat-icon>
+            All
+          </mat-option>
           <mat-option *ngFor="let status of projectStatuses" [value]="status">
             <div class="status-badge" [ngStyle]="projectStatusService.getStatusStyles(status)">
+              <mat-icon [ngSwitch]="status">
+                <ng-container *ngSwitchCase="'Pending'">pending</ng-container>
+                <ng-container *ngSwitchCase="'Approved'">done_all</ng-container>
+                <ng-container *ngSwitchCase="'In Progress'">loop</ng-container>
+                <ng-container *ngSwitchCase="'Under Review'">rate_review</ng-container>
+                <ng-container *ngSwitchCase="'Completed'">check_circle</ng-container>
+                <ng-container *ngSwitchCase="'On Hold'">pause_circle</ng-container>
+                <ng-container *ngSwitchDefault>radio_button_unchecked</ng-container>
+              </mat-icon>
               {{ status }}
             </div>
           </mat-option>
@@ -24,24 +39,49 @@
                 (click)="selectProject(project)" 
                 [class.selected]="selectedProject?._id === project._id"
                 class="project-card">
-        <mat-card-header class="card-class-header">
-          <mat-card-title>{{ project.name }}</mat-card-title>
-          <mat-card-subtitle>
-            Created on: {{ project.createdAt | date }}
-          </mat-card-subtitle>
+        <div class="card-header">
+          <div class="card-title-section">
+            <div class="title-row">
+              <mat-icon class="project-type-icon">folder</mat-icon>
+              <h3 class="project-title">{{ project.name }}</h3>
+            </div>
+            <div class="meta-row">
+              <span class="creation-date">
+                <mat-icon class="meta-icon">event</mat-icon>
+                {{ project.createdAt | date:'mediumDate' }}
+              </span>
+            </div>
+          </div>
           <div class="status-badge" [ngStyle]="projectStatusService.getStatusStyles(project.status)">
+            <mat-icon [ngSwitch]="project.status">
+              <ng-container *ngSwitchCase="'Pending'">pending</ng-container>
+              <ng-container *ngSwitchCase="'Approved'">done_all</ng-container>
+              <ng-container *ngSwitchCase="'In Progress'">loop</ng-container>
+              <ng-container *ngSwitchCase="'Under Review'">rate_review</ng-container>
+              <ng-container *ngSwitchCase="'Completed'">check_circle</ng-container>
+              <ng-container *ngSwitchCase="'On Hold'">pause_circle</ng-container>
+              <ng-container *ngSwitchDefault>radio_button_unchecked</ng-container>
+            </mat-icon>
             {{ project.status }}
           </div>
-        </mat-card-header>
+        </div>
+  
         <mat-card-content>
-          <p class="truncate">{{ project.description }}</p>
+          <p class="project-description" [class.expanded]="isProjectExpanded(project)">
+            {{ project.description }}
+          </p>
+          <button *ngIf="isExpandable(project)" 
+                  class="expand-button" 
+                  (click)="toggleExpand(project, $event)">
+            {{ isProjectExpanded(project) ? 'Show less' : 'Show more' }}
+          </button>
         </mat-card-content>
       </mat-card>
     </div>
   </div>
   
   <div class="project-details" *ngIf="selectedProject">
-      <app-project-header
+    <app-project-header
       [project]="selectedProject"
       [isAdmin]="isAdmin"
       (statusChange)="updateProjectStatus($event)">

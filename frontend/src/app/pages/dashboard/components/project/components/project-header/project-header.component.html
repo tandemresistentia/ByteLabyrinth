@@ -3,10 +3,20 @@
   <div class="project-header" [class.expanded]="isExpanded">
     <div class="header-content">
       <div class="header-left">
-        <h2>{{ project?.name }}</h2>
-        <p class="subtitle">Created on: {{ project?.createdAt | date }}</p>
-      </div>
-
+        <div class="card-title-section">
+          <div class="title-row">
+            <mat-icon class="project-type-icon">folder</mat-icon>
+            <h3 class="project-title">{{ project.name }}</h3>
+          </div>
+          <div class="meta-row">
+            <span class="creation-date">
+              <mat-icon class="meta-icon">event</mat-icon>
+              {{ project.createdAt | date:'mediumDate' }}
+            </span>
+          </div>
+        </div>
+        </div>  
+        
       <div class="header-right">
         <div class="project-payment" *ngIf="project?.status === 'Approved'">
           <app-payment [projectId]="project?._id"></app-payment>
@@ -21,6 +31,15 @@
 
         <ng-template #regularUserStatus>
           <div class="status-badge" [ngStyle]="projectStatusService.getStatusStyles(project?.status)">
+            <mat-icon [ngSwitch]="project.status">
+              <ng-container *ngSwitchCase="'Pending'">pending</ng-container>
+              <ng-container *ngSwitchCase="'Approved'">done_all</ng-container>
+              <ng-container *ngSwitchCase="'In Progress'">loop</ng-container>
+              <ng-container *ngSwitchCase="'Under Review'">rate_review</ng-container>
+              <ng-container *ngSwitchCase="'Completed'">check_circle</ng-container>
+              <ng-container *ngSwitchCase="'On Hold'">pause_circle</ng-container>
+              <ng-container *ngSwitchDefault>radio_button_unchecked</ng-container>
+            </mat-icon>
             {{ project?.status }}
           </div>
         </ng-template>

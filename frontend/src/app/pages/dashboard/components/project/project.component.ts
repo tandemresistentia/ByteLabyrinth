@@ -49,12 +49,38 @@ export class ProjectComponent implements OnInit {
   private hasInitializedChat: boolean = false;
   isAdmin: boolean = false;
   projectStatuses = Object.values(ProjectStatus);
+  isExpanded = new Set<string>();
 
   constructor(
     public projectStatusService: ProjectStatusService,
     private projectService: ProjectService,
     private authService: AuthService
   ) {}
+
+  isProjectExpanded(project: any): boolean {
+    return this.isExpanded.has(project._id);
+  }
+
+  toggleExpand(project: any, event: Event) {
+    event.stopPropagation();
+    if (this.isExpanded.has(project._id)) {
+      this.isExpanded.delete(project._id);
+    } else {
+      this.isExpanded.add(project._id);
+    }
+  }
+  
+  isExpandable(project: any): boolean {
+    const element = document.createElement('div');
+    element.style.visibility = 'hidden';
+    element.style.fontSize = '0.875rem';
+    element.style.lineHeight = '1.6';
+    element.innerText = project.description;
+    document.body.appendChild(element);
+    const isExpandable = element.offsetHeight > 48; // Approximate height of 2 lines
+    document.body.removeChild(element);
+    return isExpandable;
+  }
 
   ngOnInit() {
     this.isAdmin = this.authService.getUserId() === ProjectConstants.backend.ADMIN_USER_ID;

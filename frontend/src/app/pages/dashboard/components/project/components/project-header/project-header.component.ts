@@ -7,6 +7,7 @@ import { PaymentComponent } from '../payment/payment.component';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { ProjectConstants } from '../../project-constants';
 import { ProjectFileComponent } from './project-file/project-file.component';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-project-header',
@@ -15,7 +16,8 @@ import { ProjectFileComponent } from './project-file/project-file.component';
     CommonModule,
     ProjectStatusSelectorComponent,
     PaymentComponent,
-    ProjectFileComponent
+    ProjectFileComponent,
+    MatIcon
   ],
   templateUrl: './project-header.component.html',
   styleUrl: './project-header.component.scss',
