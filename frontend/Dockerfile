@@ -23,4 +23,4 @@ RUN npm run build
 EXPOSE 4000
 
 # Start command will come from railway.toml
-CMD ["node", "server.js"]
+CMD ["node", "server.ts"]
