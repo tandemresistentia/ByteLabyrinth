@@ -1,9 +1,5 @@
-[
-build
-]
+[build]
 builder = "DOCKERFILE"
 
-[
-deploy
-]
-startCommand = "node dist/frontend/server/main.server.mjs"
+[deploy]
+startCommand = "npm start"
