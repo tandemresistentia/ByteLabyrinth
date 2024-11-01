@@ -25,6 +25,7 @@
     "@angular/ssr": "17.3.1",
     "@stripe/stripe-js": "^4.9.0",
     "chart.js": "^4.4.4",
+    "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "jwt-decode": "^4.0.0",
     "ng-chat": "^3.1.0",

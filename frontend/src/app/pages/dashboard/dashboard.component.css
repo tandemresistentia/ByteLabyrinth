@@ -39,7 +39,13 @@ mat-toolbar mat-icon {
 .error-message mat-icon {
   margin-right: 8px;
 }
-
+.no-projects-message {
+  position: absolute;
+  left: 40%;
+  top: 40%;
+  display: flex;
+  gap: 5px;
+}
 /* Responsive adjustments */
 @media (max-width: 600px) {
   .dashboard-content {

@@ -31,7 +31,6 @@ export class ProjectFileComponent implements OnChanges {
   constructor(private projectFileService: ProjectFileService) {}
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log(this.project);
     if (changes['project']) {
       this.resetUploadState();
       this.updateDownloadPermission();
