@@ -37,7 +37,7 @@ import { ProjectConstants, isAdmin } from './project-constants';
     ChatComponent,
     PaymentComponent,
     ProjectHeaderComponent
-]
+  ]
 })
 export class ProjectComponent implements OnInit {
   @Input() projects: any[] = [];
@@ -45,11 +45,15 @@ export class ProjectComponent implements OnInit {
   filteredProjects: any[] = [];
   selectedProject: any | null = null;
   searchTerm: string = '';
-  statusFilter: string = 'All';
+  statusFilter: ProjectStatus | 'All' = 'All';
   private hasInitializedChat: boolean = false;
   isAdmin: boolean = false;
   projectStatuses = Object.values(ProjectStatus);
   isExpanded = new Set<string>();
+  expandableProjects = new Set<string>();
+  
+  private searchDebounceTimeout: any;
+  private readonly DEBOUNCE_TIME = 300; // milliseconds
 
   constructor(
     public projectStatusService: ProjectStatusService,
@@ -57,11 +61,58 @@ export class ProjectComponent implements OnInit {
     private authService: AuthService
   ) {}
 
+  ngOnInit(): void {
+    this.initializeComponent();
+  }
+
+  private async initializeComponent(): Promise<void> {
+    const userId = this.authService.getUserId();
+    this.isAdmin = userId ? isAdmin(userId) : false;
+    
+    // Calculate expandable projects once
+    this.updateExpandableProjects();
+    
+    // Initial filter application
+    this.applyFilters();
+    
+    // Select first project if available
+    this.initializeSelectedProject();
+  }
+
+  private initializeSelectedProject(): void {
+    if (!this.hasInitializedChat && this.filteredProjects.length > 0) {
+      this.selectProject(this.filteredProjects[0]);
+      this.hasInitializedChat = true;
+    }
+  }
+
+  private updateExpandableProjects(): void {
+    this.expandableProjects.clear();
+    const tempElement = document.createElement('div');
+    tempElement.style.visibility = 'hidden';
+    tempElement.style.fontSize = '0.875rem';
+    tempElement.style.lineHeight = '1.6';
+    document.body.appendChild(tempElement);
+
+    try {
+      for (const project of this.projects) {
+        if (project.description) {
+          tempElement.innerText = project.description;
+          if (tempElement.offsetHeight > 48) {
+            this.expandableProjects.add(project._id);
+          }
+        }
+      }
+    } finally {
+      document.body.removeChild(tempElement);
+    }
+  }
+
   isProjectExpanded(project: any): boolean {
     return this.isExpanded.has(project._id);
   }
 
-  toggleExpand(project: any, event: Event) {
+  toggleExpand(project: any, event: Event): void {
     event.stopPropagation();
     if (this.isExpanded.has(project._id)) {
       this.isExpanded.delete(project._id);
@@ -71,49 +122,59 @@ export class ProjectComponent implements OnInit {
   }
   
   isExpandable(project: any): boolean {
-    const element = document.createElement('div');
-    element.style.visibility = 'hidden';
-    element.style.fontSize = '0.875rem';
-    element.style.lineHeight = '1.6';
-    element.innerText = project.description;
-    document.body.appendChild(element);
-    const isExpandable = element.offsetHeight > 48; // Approximate height of 2 lines
-    document.body.removeChild(element);
-    return isExpandable;
+    return this.expandableProjects.has(project._id);
   }
 
-  ngOnInit() {
-    const userId = this.authService.getUserId();
-    this.isAdmin = userId ? isAdmin(userId) : false;
-    this.applyFilters();
-    if (!this.hasInitializedChat && this.filteredProjects.length > 0) {
-      this.selectProject(this.filteredProjects[0]);
-      this.hasInitializedChat = true;
-    }
-  }
-
-  async updateProjectStatus(newStatus: ProjectStatus) {
-    if (this.selectedProject) {
-      const oldStatus = this.selectedProject.status;
-      try {
-        this.selectedProject.status = newStatus;
-        await this.projectService.updateProjectStatus(this.selectedProject._id, newStatus).toPromise();
-        this.applyFilters();
-      } catch (error) {
-        this.selectedProject.status = oldStatus;
-        console.error('Failed to update project status:', error);
-      }
-    }
-  }
-
-  selectProject(project: any) {
+  selectProject(project: any): void {
     this.selectedProject = project;
   }
 
-  applyFilters() {
-    this.filteredProjects = this.projects.filter(project => 
-      project.name.toLowerCase().includes(this.searchTerm.toLowerCase()) &&
-      (this.statusFilter === 'All' || project.status === this.statusFilter)
-    );
+  async updateProjectStatus(newStatus: ProjectStatus): Promise<void> {
+    if (!this.selectedProject) return;
+
+    const oldStatus = this.selectedProject.status;
+    try {
+      this.selectedProject.status = newStatus;
+      await this.projectService.updateProjectStatus(this.selectedProject._id, newStatus).toPromise();
+      this.applyFilters();
+    } catch (error) {
+      this.selectedProject.status = oldStatus;
+      console.error('Failed to update project status:', error);
+      // You might want to show a user-friendly error message here
+    }
+  }
+
+  onSearchChange(): void {
+    // Clear any existing timeout
+    if (this.searchDebounceTimeout) {
+      clearTimeout(this.searchDebounceTimeout);
+    }
+
+    // Set a new timeout
+    this.searchDebounceTimeout = setTimeout(() => {
+      this.applyFilters();
+    }, this.DEBOUNCE_TIME);
+  }
+
+  onStatusFilterChange(): void {
+    this.applyFilters();
+  }
+
+  public applyFilters(): void {
+    const searchTermLower = this.searchTerm.toLowerCase();
+    
+    this.filteredProjects = this.projects.filter(project => {
+      const matchesSearch = project.name.toLowerCase().includes(searchTermLower);
+      const matchesStatus = this.statusFilter === 'All' || project.status === this.statusFilter;
+      
+      return matchesSearch && matchesStatus;
+    });
+  }
+
+  // Optional: Clean up when component is destroyed
+  ngOnDestroy(): void {
+    if (this.searchDebounceTimeout) {
+      clearTimeout(this.searchDebounceTimeout);
+    }
   }
 }
