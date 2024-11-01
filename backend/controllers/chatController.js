@@ -1,7 +1,7 @@
 const Chat = require('../models/Chat');
 const Project = require('../models/Project');
 const mongoose = require('mongoose');
-const { ADMIN_USER_ID} = require('../models/constants');
+const { isAdmin } = require('../models/constants');
 
 exports.getMessages = async (req, res) => {
   try {
@@ -16,7 +16,7 @@ exports.getMessages = async (req, res) => {
     }
 
     // Check if user is admin or project creator
-    if (userId !== ADMIN_USER_ID && project.createdBy.toString() !== userId) {
+    if (!isAdmin(userId) && project.createdBy.toString() !== userId) {
       return res.status(403).json({ message: 'Not authorized to access this chat' });
     }
 
@@ -63,7 +63,7 @@ exports.sendMessage = async (req, res) => {
     }
 
     // Check if user is admin or project creator
-    if (userId !== ADMIN_USER_ID && project.createdBy.toString() !== userId) {
+    if (!isAdmin(userId) && project.createdBy.toString() !== userId) {
       return res.status(403).json({ message: 'Not authorized to send messages in this chat' });
     }
 
@@ -128,7 +128,7 @@ exports.handleSocketEvents = (io) => {
         }
 
         // Allow if admin or project creator
-        if (userId === ADMIN_USER_ID || project.createdBy.toString() === userId) {
+        if (isAdmin(userId) || project.createdBy.toString() === userId) {
           socket.join(projectId);
           console.log(`User ${userId} joined project chat: ${projectId}`);
           socket.emit('joined-project', { projectId });

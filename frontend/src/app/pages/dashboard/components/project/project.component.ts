@@ -16,7 +16,7 @@ import { ProjectService } from './project.service';
 import { AuthService } from '../../../login/components/auth.service';
 import { PaymentComponent } from './components/payment/payment.component';
 import { ProjectHeaderComponent } from './components/project-header/project-header.component';
-import { ProjectConstants } from './project-constants';
+import { ProjectConstants, isAdmin } from './project-constants';
 
 @Component({
   selector: 'app-project',
@@ -83,7 +83,8 @@ export class ProjectComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.isAdmin = this.authService.getUserId() === ProjectConstants.backend.ADMIN_USER_ID;
+    const userId = this.authService.getUserId();
+    this.isAdmin = userId ? isAdmin(userId) : false;
     this.applyFilters();
     if (!this.hasInitializedChat && this.filteredProjects.length > 0) {
       this.selectProject(this.filteredProjects[0]);

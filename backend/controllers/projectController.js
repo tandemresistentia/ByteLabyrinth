@@ -3,7 +3,7 @@ const Chat = require('../models/Chat');
 const mongoose = require('mongoose');
 const fs = require('fs');
 
-const {PROJECT_STATUSES, ADMIN_USER_ID} = require('../models/constants');
+const { PROJECT_STATUSES, isAdmin, ADMIN_USER_IDS } = require('../models/constants');
 
 exports.createProject = async (req, res) => {
   try {
@@ -17,12 +17,14 @@ exports.createProject = async (req, res) => {
     });
 
     const savedProject = await newProject.save();
+    const chatParticipants = [userId, ...ADMIN_USER_IDS];
+    const uniqueParticipants = [...new Set(chatParticipants)];
 
     const newChat = new Chat({
       projectId: savedProject._id,
-      participants: [userId, ADMIN_USER_ID],
+      participants: [uniqueParticipants],
       messages: []
-    })
+    });
 
     await newChat.save();
 
@@ -45,7 +47,7 @@ exports.getUserProjects = async (req, res) => {
     const requestingUserId = req.user.id;
     
     // If admin is requesting, show all projects
-    if (requestingUserId === ADMIN_USER_ID) {
+    if (isAdmin(requestingUserId)) {
       const allProjects = await Project.find({})
         .populate('createdBy', 'username email')
         .sort({ createdAt: -1 });
@@ -111,7 +113,7 @@ exports.uploadProjectFile = async (req, res) => {
     const requestingUserId = req.user.id;
 
     // Check if user is admin
-    if (requestingUserId !== ADMIN_USER_ID) {
+    if (!isAdmin(requestingUserId)) {
       return res.status(403).json({ 
         message: 'Only admins can upload project files' 
       });
@@ -185,7 +187,7 @@ exports.downloadProjectFile = async (req, res) => {
     }
 
     // Check if user has permission to download
-    const hasPermission = requestingUserId === ADMIN_USER_ID || 
+    const hasPermission = isAdmin(requestingUserId) || 
                          project.createdBy.toString() === requestingUserId;
     if (!hasPermission) {
       return res.status(403).json({ 
@@ -194,7 +196,7 @@ exports.downloadProjectFile = async (req, res) => {
     }
 
     // Check if project is completed (for non-admin users)
-    if (requestingUserId !== ADMIN_USER_ID && project.status !== 'Completed') {
+    if (!isAdmin(requestingUserId) && project.status !== 'Completed') {
       return res.status(403).json({ 
         message: 'File is only available after project completion' 
       });
