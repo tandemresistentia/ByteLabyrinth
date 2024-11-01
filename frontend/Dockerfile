@@ -23,4 +23,4 @@ RUN npm run build
 EXPOSE 4000
 
 # Start command will come from railway.toml
-CMD ["node", "dist/frontend/server/main.server.mjs"]
+CMD ["node", "server.js"]
