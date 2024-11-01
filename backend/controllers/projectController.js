@@ -22,7 +22,7 @@ exports.createProject = async (req, res) => {
 
     const newChat = new Chat({
       projectId: savedProject._id,
-      participants: [uniqueParticipants],
+      participants: uniqueParticipants,
       messages: []
     });
 

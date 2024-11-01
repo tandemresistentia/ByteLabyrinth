@@ -15,12 +15,8 @@ import { throwError } from 'rxjs';
   selector: 'app-dashboard',
   template: `
     <div class="dashboard-container">
-      <div class="dashboard-content" *ngIf="!loading && !error && projects.length > 0">
+      <div class="dashboard-content" *ngIf="!error && projects.length > 0">
         <app-project [projects]="projects"></app-project>
-      </div>
-      
-      <div class="loading-spinner" *ngIf="loading">
-        <mat-spinner></mat-spinner>
       </div>
       
       <div *ngIf="error" class="error-message">
@@ -28,7 +24,7 @@ import { throwError } from 'rxjs';
         <span>{{ error }}</span>
       </div>
 
-      <div *ngIf="!loading && !error && projects.length === 0" class="no-projects-message">
+      <div *ngIf="!error && projects.length === 0" class="no-projects-message">
         <mat-icon>info</mat-icon>
         <span>No projects found. Create a new project to get started!</span>
       </div>

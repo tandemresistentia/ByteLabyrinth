@@ -73,7 +73,10 @@ export class ProjectSpecificationPopupComponent implements OnInit {
             this.snackBar.open('Project created successfully', 'Close', { duration: 3000 });
             this.submitForm.emit(response);
             this.close();
-            this.router.navigate(['/dashboard']);
+            this.router.navigate(['/dashboard'])
+            .then(() => {
+              window.location.reload();
+            });
           },
           (error: HttpErrorResponse) => {
             if (error.status === 401) {
