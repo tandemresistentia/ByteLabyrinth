@@ -28,7 +28,10 @@ const io = socketIo(server, {
     methods: ["GET", "POST"]
   }
 });
-
+// Basic health check endpoint
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
 // Middleware
 app.use(cors());
 app.use(express.json());
