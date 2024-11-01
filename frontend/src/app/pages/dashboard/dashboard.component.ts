@@ -62,7 +62,6 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.fetchUserProjects();
-    console.log(API_ROUTES.PROJECTS.BASE);
   }
 
   fetchUserProjects() {

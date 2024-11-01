@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
 import { jwtDecode } from "jwt-decode";
-
+import { API_ROUTES } from 'src/app/config/api-routes';
 
 interface DecodedToken {
   userId: string;
@@ -16,7 +16,6 @@ interface DecodedToken {
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000/api/auth';
   private authTokenSubject = new BehaviorSubject<string | null>(null);
   authToken$ = this.authTokenSubject.asObservable();
   private userIdSubject = new BehaviorSubject<string | null>(null);
@@ -57,7 +56,7 @@ export class AuthService {
   }
 
   login(username: string, password: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, { username, password }).pipe(
+    return this.http.post(`${API_ROUTES.AUTH.LOGIN}`, { username, password }).pipe(
       tap((response: any) => {
         if (response && response.token) {
           this.setAuthToken(response.token);
@@ -67,7 +66,7 @@ export class AuthService {
   }
 
   signup(username: string, email: string, password: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/signup`, { username, email, password }).pipe(
+    return this.http.post(`${API_ROUTES.AUTH.SIGNUP}`, { username, email, password }).pipe(
       tap((response: any) => {
         if (response && response.token) {
           this.setAuthToken(response.token);
