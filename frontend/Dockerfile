@@ -16,11 +16,11 @@ RUN npm install -g @angular/cli
 # Copy project files
 COPY . .
 
-# Build SSR application
+# Build SSR application with production configuration
 RUN npm run build
 
 # Expose port
 EXPOSE 4000
 
-# The start command will come from railway.toml
+# Start the application
 CMD ["npm", "start"]
