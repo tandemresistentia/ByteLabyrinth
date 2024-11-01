@@ -1,11 +1,7 @@
-[
-build
-]
+[build]
 builder = "DOCKERFILE"
 
-[
-deploy
-]
+[deploy]
 startCommand = "npm start"
 healthcheckPath = "/"
 healthcheckTimeout = 100
