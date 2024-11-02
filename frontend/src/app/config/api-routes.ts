@@ -1,9 +1,5 @@
-const isProd = true; // Toggle this to switch environments
 
-const BACKEND_URL = isProd 
-  ? 'https://modest-intuition-production.up.railway.app'
-  : 'http://localhost:3000';
-
+const BACKEND_URL = process.env['BACKEND_URL'];
 const BASE_URL = `${BACKEND_URL}/api`;
 
 export const API_ROUTES = {
