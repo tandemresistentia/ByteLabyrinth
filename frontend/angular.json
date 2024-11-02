@@ -15,14 +15,8 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-builders/custom-webpack:application",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "customWebpackConfig": {
-              "path": "./custom-webpack.config.ts",
-              "replaceDuplicatePlugins": true
-            },
-            "verbose": false,
-            "quiet": true,
             "outputPath": "dist/frontend",
             "index": "src/index.html",
             "browser": "src/main.ts",
@@ -54,8 +48,10 @@
                 "node_modules"
               ]
             },
-            "optimization": true,
-            "sourceMap": false
+            "optimization": false,
+            "sourceMap": true,
+            "watch": true,
+            "poll": 2000
           },
           "configurations": {
             "production": {
@@ -73,6 +69,8 @@
               ],
               "outputHashing": "all",
               "optimization": true,
+              "sourceMap": false,
+              "watch": false,
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -83,19 +81,29 @@
             "development": {
               "optimization": false,
               "extractLicenses": false,
-              "sourceMap": true
+              "sourceMap": true,
+              "watch": true,
+              "poll": 2000
             }
           },
-          "defaultConfiguration": "production"
+          "defaultConfiguration": "development"
         },
         "serve": {
-          "builder": "@angular-builders/custom-webpack:dev-server",
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "buildTarget": "frontend:build:development",
+            "liveReload": true,
+            "watch": true,
+            "poll": 2000
+          },
           "configurations": {
             "production": {
-              "buildTarget": "frontend:build:production"
+              "buildTarget": "frontend:build:production",
+              "watch": false
             },
             "development": {
-              "buildTarget": "frontend:build:development"
+              "buildTarget": "frontend:build:development",
+              "watch": true
             }
           },
           "defaultConfiguration": "development"
