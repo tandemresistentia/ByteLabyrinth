@@ -50,8 +50,8 @@
             },
             "optimization": false,
             "sourceMap": true,
-            "watch": true,
-            "poll": 2000
+            "watch": false,
+            "poll": false
           },
           "configurations": {
             "production": {
@@ -82,7 +82,7 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,
-              "watch": true,
+              "watch": false,
               "poll": 2000
             }
           },
@@ -93,7 +93,7 @@
           "options": {
             "buildTarget": "frontend:build:development",
             "liveReload": true,
-            "watch": true,
+            "watch": false,
             "poll": 2000
           },
           "configurations": {
@@ -103,7 +103,7 @@
             },
             "development": {
               "buildTarget": "frontend:build:development",
-              "watch": true
+              "watch": false
             }
           },
           "defaultConfiguration": "development"
