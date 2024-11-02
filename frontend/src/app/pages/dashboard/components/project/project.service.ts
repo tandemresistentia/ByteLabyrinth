@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { API_ROUTES } from '../../../../config/api-routes';
 import { ProjectStatus } from './components/project-status/project-status.enum';
-import { AuthService } from '../../../login/components/auth.service';
+import { AuthService } from '../../../../config/auth.service';
 import { Observable, throwError } from 'rxjs'; // Added for error handling
 import { catchError, tap } from 'rxjs/operators'; // Added for debugging
 

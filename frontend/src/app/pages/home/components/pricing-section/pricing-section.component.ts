@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ProjectSpecificationPopupComponent } from './components/popup/PopupComponent';
-import { AuthService } from '../../../login/components/auth.service';
+import { AuthService } from '../../../../config/auth.service';
 import { LoginComponent } from '../../../login/login.component';
 
 @Component({

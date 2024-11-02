@@ -3,7 +3,7 @@ import { HttpClient, HttpEventType, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { API_ROUTES } from '../../../../../../../config/api-routes';
-import { AuthService } from '../../../../../../login/components/auth.service';
+import { AuthService } from '../../../../../../../config/auth.service';
 
 @Injectable({
   providedIn: 'root'

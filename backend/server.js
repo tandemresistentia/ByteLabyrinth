@@ -10,6 +10,7 @@ const path = require('path');
 const authRoutes = require('./routes/auth');
 const projectRoutes = require('./routes/projectRoutes');
 const chatRoutes = require('./routes/chatRoutes');
+const emailRoutes = require('./routes/emailRoutes');
 
 // Controllers
 const chatController = require('./controllers/chatController');
@@ -38,7 +39,7 @@ app.set('io', io); // Make io available to routes
 app.use('/api/auth', authRoutes);
 app.use('/api', projectRoutes);  
 app.use('/api', chatRoutes);  
-
+app.use('/api', emailRoutes);
 
 // File routes
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));

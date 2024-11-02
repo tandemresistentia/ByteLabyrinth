@@ -8,8 +8,9 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { API_ROUTES } from '../../../../../../config/api-routes';
-import { AuthService } from '../../../../../login/components/auth.service';
+import { AuthService } from '../../../../../../config/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { EmailService } from 'src/app/components/email/email.service';
 
 @Component({
   selector: 'app-project-specification-popup',
@@ -39,7 +40,8 @@ export class ProjectSpecificationPopupComponent implements OnInit {
     private http: HttpClient,
     private authService: AuthService,
     private snackBar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private emailService: EmailService
   ) {}
 
   ngOnInit() {
@@ -70,6 +72,28 @@ export class ProjectSpecificationPopupComponent implements OnInit {
       this.http.post(API_ROUTES.PROJECTS.CREATE, projectData, { headers })
         .subscribe(
           (response: any) => {
+            // Send email notifications
+            const userEmail = this.authService.getCurrentUser()?.email; // Assuming this method exists
+            if (!userEmail) {
+              this.snackBar.open('User email not found', 'Close', { duration: 3000 });
+              return;
+            }
+            const emailData: any = {
+              projectName: this.projectName,
+              projectDescription: this.projectDescription,
+              userEmail: userEmail,
+              adminEmail: 'luismvg41@gmail.com'
+            };
+
+            this.emailService.sendProjectNotifications(emailData).subscribe(
+              (emailResponse) => {
+                console.log('Email notifications sent successfully');
+              },
+              (emailError) => {
+                console.error('Error sending email notifications:', emailError);
+              }
+            );
+            
             this.snackBar.open('Project created successfully', 'Close', { duration: 3000 });
             this.submitForm.emit(response);
             this.close();

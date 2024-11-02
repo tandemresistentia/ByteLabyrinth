@@ -13,7 +13,7 @@ import { ProjectStatusService } from './components/project-status/project-status
 import { ProjectStatusSelectorComponent } from './components/project-status/project-status-selector.component';
 import { ChatComponent } from './components/chat/chat.component';
 import { ProjectService } from './project.service';
-import { AuthService } from '../../../login/components/auth.service';
+import { AuthService } from '../../../../config/auth.service';
 import { PaymentComponent } from './components/payment/payment.component';
 import { ProjectHeaderComponent } from './components/project-header/project-header.component';
 import { ProjectConstants, isAdmin } from './project-constants';

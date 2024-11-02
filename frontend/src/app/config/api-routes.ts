@@ -21,6 +21,9 @@ export const API_ROUTES = {
   CHAT: {
     GET_MESSAGES: `${BASE_URL}/projects/:projectId/messages`,
     SEND_MESSAGE: `${BASE_URL}/projects/:projectId/messages`,
+  },
+  EMAIL: {
+    SEND_PROJECT_NOTIFICATION : `${BASE_URL}/email/project-notification`,
   }
 };
 

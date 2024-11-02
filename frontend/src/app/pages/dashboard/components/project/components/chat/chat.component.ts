@@ -7,7 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Subscription } from 'rxjs';
 import { ChatService } from './chat.service';
-import { AuthService } from '../../../../../login/components/auth.service';
+import { AuthService } from '../../../../../../config/auth.service';
 
 // chat.component.ts
 @Component({

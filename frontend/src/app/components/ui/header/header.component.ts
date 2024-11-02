@@ -5,7 +5,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { LoginComponent } from '../../../pages/login/login.component';
-import { AuthService } from '../../../pages/login/components/auth.service';
+import { AuthService } from '../../../config/auth.service';
 import { Subscription, filter } from 'rxjs';
 
 @Component({

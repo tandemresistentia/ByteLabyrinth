@@ -5,7 +5,7 @@ import { Observable, throwError, Subject, BehaviorSubject, from } from 'rxjs';
 import { filter, switchMap, catchError } from 'rxjs/operators';
 import { io, Socket } from 'socket.io-client';
 import { API_ROUTES, SOCKET_URL } from '../../../../../../config/api-routes';
-import { AuthService } from '../../../../../login/components/auth.service';
+import { AuthService } from '../../../../../../config/auth.service';
 
 interface ChatMessage {
   projectId: string;
