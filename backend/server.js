@@ -1,10 +1,16 @@
+// server.js
+const path = require('path');
+// Load dotenv FIRST, before any other imports
+const dotenv = require('dotenv');
+// Configure dotenv with the absolute path
+dotenv.config({ path: path.resolve(__dirname, '.env') });
+
+// Now import all other dependencies
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
 const cors = require('cors');
-const dotenv = require('dotenv');
 const connectDB = require('./db');
-const path = require('path');
 
 // Route imports
 const authRoutes = require('./routes/auth');
@@ -14,9 +20,6 @@ const emailRoutes = require('./routes/emailRoutes');
 
 // Controllers
 const chatController = require('./controllers/chatController');
-
-// Load environment variables
-dotenv.config();
 
 // Initialize express and create HTTP server
 const app = express();
@@ -33,7 +36,7 @@ const io = socketIo(server, {
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.set('io', io); // Make io available to routes
+app.set('io', io);
 
 // API Routes
 app.use('/api/auth', authRoutes);

@@ -8,8 +8,17 @@ import { API_ROUTES } from 'src/app/config/api-routes';
 interface DecodedToken {
   userId: string;
   email: string;
+  username: string;
   iat: number;
   exp: number;
+}
+
+interface AuthResponse {
+  token: string;
+  userId: string;
+  email: string;
+  username: string;
+  message?: string;
 }
 
 @Injectable({
@@ -18,8 +27,16 @@ interface DecodedToken {
 export class AuthService {
   private authTokenSubject = new BehaviorSubject<string | null>(null);
   authToken$ = this.authTokenSubject.asObservable();
+  
   private userIdSubject = new BehaviorSubject<string | null>(null);
   userId$ = this.userIdSubject.asObservable();
+  
+  private userEmailSubject = new BehaviorSubject<string | null>(null);
+  userEmail$ = this.userEmailSubject.asObservable();
+  
+  private usernameSubject = new BehaviorSubject<string | null>(null);
+  username$ = this.usernameSubject.asObservable();
+  
   private isBrowser: boolean;
 
   constructor(
@@ -35,78 +52,97 @@ export class AuthService {
       const token = sessionStorage.getItem('authToken');
       if (token) {
         this.setAuthToken(token);
+        
+        // Restore other session data
+        const email = sessionStorage.getItem('userEmail');
+        const userId = sessionStorage.getItem('userId');
+        const username = sessionStorage.getItem('username');
+        
+        if (email) this.userEmailSubject.next(email);
+        if (userId) this.userIdSubject.next(userId);
+        if (username) this.usernameSubject.next(username);
       }
     }
   }
 
-  getCurrentUser(): { id: string; email: string } | null {
-    const token = this.getAuthToken();
-    if (!token) return null;
+  signup(username: string, email: string, password: string): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${API_ROUTES.AUTH.SIGNUP}`, { 
+      username, 
+      email, 
+      password 
+    }).pipe(
+      tap((response: AuthResponse) => {
+        if (response.token) {
+          this.setAuthToken(response.token);
+          this.setUserData(response);
+        }
+      })
+    );
+  }
 
-    try {
-      const decodedToken = jwtDecode(token) as DecodedToken;
-      return {
-        id: decodedToken.userId,
-        email: decodedToken.email
-      };
-    } catch (error) {
-      console.error('Error decoding token:', error);
-      return null;
+  login(username: string, password: string): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${API_ROUTES.AUTH.LOGIN}`, { 
+      username, 
+      password 
+    }).pipe(
+      tap((response: AuthResponse) => {
+        if (response.token) {
+          this.setAuthToken(response.token);
+          this.setUserData(response);
+        }
+      })
+    );
+  }
+
+  private setUserData(response: AuthResponse) {
+    if (this.isBrowser) {
+      if (response.email) {
+        sessionStorage.setItem('userEmail', response.email);
+        this.userEmailSubject.next(response.email);
+      }
+      if (response.userId) {
+        sessionStorage.setItem('userId', response.userId);
+        this.userIdSubject.next(response.userId);
+      }
+      if (response.username) {
+        sessionStorage.setItem('username', response.username);
+        this.usernameSubject.next(response.username);
+      }
     }
-  }
-
-  login(username: string, password: string): Observable<any> {
-    return this.http.post(`${API_ROUTES.AUTH.LOGIN}`, { username, password }).pipe(
-      tap((response: any) => {
-        if (response && response.token) {
-          this.setAuthToken(response.token);
-        }
-      })
-    );
-  }
-
-  signup(username: string, email: string, password: string): Observable<any> {
-    return this.http.post(`${API_ROUTES.AUTH.SIGNUP}`, { username, email, password }).pipe(
-      tap((response: any) => {
-        if (response && response.token) {
-          this.setAuthToken(response.token);
-        }
-      })
-    );
   }
 
   setAuthToken(token: string) {
     if (this.isBrowser) {
       sessionStorage.setItem('authToken', token);
+      this.authTokenSubject.next(token);
+      
+      try {
+        const decodedToken = jwtDecode<DecodedToken>(token);
+        if (decodedToken.email) this.userEmailSubject.next(decodedToken.email);
+        if (decodedToken.userId) this.userIdSubject.next(decodedToken.userId);
+        if (decodedToken.username) this.usernameSubject.next(decodedToken.username);
+      } catch (error) {
+        console.error('Error decoding token:', error);
+      }
     }
-    this.authTokenSubject.next(token);
-    
-    try {
-      const decodedToken = jwtDecode(token) as DecodedToken;
-      this.setUserId(decodedToken.userId);
-    } catch (error) {
-      console.error('Error decoding token:', error);
-    }
-  }
-
-  setUserId(userId: string) {
-    if (this.isBrowser) {
-      sessionStorage.setItem('userId', userId);
-    }
-    this.userIdSubject.next(userId);
   }
 
   logout() {
     if (this.isBrowser) {
       sessionStorage.removeItem('authToken');
       sessionStorage.removeItem('userId');
+      sessionStorage.removeItem('userEmail');
+      sessionStorage.removeItem('username');
     }
+    
     this.authTokenSubject.next(null);
     this.userIdSubject.next(null);
+    this.userEmailSubject.next(null);
+    this.usernameSubject.next(null);
   }
 
   isLoggedIn(): boolean {
-    return !!this.authTokenSubject.value && !!this.userIdSubject.value;
+    return !!this.getAuthToken();
   }
 
   getAuthToken(): string | null {
@@ -115,5 +151,30 @@ export class AuthService {
 
   getUserId(): string | null {
     return this.userIdSubject.value;
+  }
+
+  getUserEmail(): string | null {
+    return this.userEmailSubject.value;
+  }
+
+  getUsername(): string | null {
+    return this.usernameSubject.value;
+  }
+
+  getCurrentUser(): { id: string; email: string; username: string } | null {
+    const token = this.getAuthToken();
+    if (!token) return null;
+
+    try {
+      const decodedToken = jwtDecode<DecodedToken>(token);
+      return {
+        id: decodedToken.userId,
+        email: decodedToken.email,
+        username: decodedToken.username
+      };
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
   }
 }

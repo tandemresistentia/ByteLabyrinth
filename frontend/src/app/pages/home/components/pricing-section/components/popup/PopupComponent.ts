@@ -73,7 +73,7 @@ export class ProjectSpecificationPopupComponent implements OnInit {
         .subscribe(
           (response: any) => {
             // Send email notifications
-            const userEmail = this.authService.getCurrentUser()?.email; // Assuming this method exists
+            const userEmail = this.authService.getUserEmail(); 
             if (!userEmail) {
               this.snackBar.open('User email not found', 'Close', { duration: 3000 });
               return;
@@ -97,10 +97,8 @@ export class ProjectSpecificationPopupComponent implements OnInit {
             this.snackBar.open('Project created successfully', 'Close', { duration: 3000 });
             this.submitForm.emit(response);
             this.close();
-            this.router.navigate(['/dashboard'])
-            .then(() => {
-              window.location.reload();
-            });
+
+
           },
           (error: HttpErrorResponse) => {
             if (error.status === 401) {
