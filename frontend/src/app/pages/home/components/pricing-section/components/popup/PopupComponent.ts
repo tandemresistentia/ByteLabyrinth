@@ -86,9 +86,6 @@ export class ProjectSpecificationPopupComponent implements OnInit {
             };
 
             this.emailService.sendProjectNotifications(emailData).subscribe(
-              (emailResponse) => {
-                console.log('Email notifications sent successfully');
-              },
               (emailError) => {
                 console.error('Error sending email notifications:', emailError);
               }
