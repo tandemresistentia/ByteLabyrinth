@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Stripe, loadStripe } from '@stripe/stripe-js';
 import { CommonModule } from '@angular/common';
-import { ProjectConstants } from '../../project-constants';
+import { ProjectConstants } from '../../../../../../config/project-constants';
 import { ProjectService } from '../../project.service';
 import { ProjectStatus } from '../project-status/project-status.enum';
 import { MatDialog } from '@angular/material/dialog';
@@ -22,6 +22,7 @@ export class PaymentComponent implements OnInit{
   @Input() set projectId(value: string) {
     this._projectId = value;  
   }
+  @Input() project: any;
 
   get projectId(): string {
     return this._projectId;  
@@ -36,6 +37,7 @@ export class PaymentComponent implements OnInit{
   ) {}
 
   async ngOnInit() {
+    console.log(this.project);
     this.route.queryParams.subscribe(params => {
       if (params['success'] === 'true' && params['projectId']) {
         this.handlePaymentSuccess();
@@ -43,7 +45,7 @@ export class PaymentComponent implements OnInit{
     })
 
     try {
-      this.stripe = await loadStripe(ProjectConstants.stripe.publishableKey);
+      this.stripe = await loadStripe(ProjectConstants.stripe.livePublishableKey);
       if (!this.stripe) {
         console.error('Failed to initialize Stripe. Check your publishable key.');
       }
@@ -74,15 +76,31 @@ export class PaymentComponent implements OnInit{
     }
   }
 
+  private getPriceId(price: number): string {
+    switch (price) {
+      case ProjectConstants.PRICE.PRICE1:
+        return ProjectConstants.stripe.priceId1;
+      case ProjectConstants.PRICE.PRICE2:
+        return ProjectConstants.stripe.priceId2;
+      case ProjectConstants.PRICE.PRICE3:
+        return ProjectConstants.stripe.priceId3;
+      default:
+        console.error('Invalid price:', price);
+        return ProjectConstants.stripe.priceId1; // Default fallback
+    }
+  }
+
   async makePayment() {
     if (!this.stripe) {
       console.error('Stripe has not been properly initialized');
       return;
     }
 
+    const priceId = this.getPriceId(this.project.price);
+
     const { error } = await this.stripe.redirectToCheckout({
       lineItems: [{
-        price: ProjectConstants.stripe.priceId,
+        price: priceId,
         quantity: 1,
       }],
       mode: 'payment',

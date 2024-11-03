@@ -62,6 +62,7 @@ export class ProjectSpecificationPopupComponent implements OnInit {
       const projectData = {
         name: this.projectName,
         description: this.projectDescription,
+        price: this.service.price
       };
 
       const headers = new HttpHeaders({

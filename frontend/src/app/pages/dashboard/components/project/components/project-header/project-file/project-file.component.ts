@@ -5,7 +5,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ProjectFileService } from './project-file.service';
-import { ProjectConstants } from '../../../project-constants';
+import { ProjectConstants } from '../../../../../../../config/project-constants';
 
 @Component({
   selector: 'app-project-file',

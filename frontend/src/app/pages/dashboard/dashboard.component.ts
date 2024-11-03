@@ -18,11 +18,6 @@ import { throwError } from 'rxjs';
       <div class="dashboard-content" *ngIf="!error && projects.length > 0">
         <app-project [projects]="projects"></app-project>
       </div>
-      
-      <div *ngIf="error" class="error-message">
-        <mat-icon>error</mat-icon>
-        <span>{{ error }}</span>
-      </div>
 
       <div *ngIf="!error && projects.length === 0" class="no-projects-message">
         <mat-icon>info</mat-icon>

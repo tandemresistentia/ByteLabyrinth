@@ -7,13 +7,14 @@ const { PROJECT_STATUSES, isAdmin, ADMIN_USER_IDS } = require('../models/constan
 
 exports.createProject = async (req, res) => {
   try {
-    const { name, description } = req.body;
+    const { name, description, price } = req.body;
     const userId = req.user.id;
 
     const newProject = new Project({
       name,
       description,
       createdBy: userId,
+      price,
     });
 
     const savedProject = await newProject.save();

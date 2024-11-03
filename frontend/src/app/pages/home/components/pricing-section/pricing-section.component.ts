@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { ProjectSpecificationPopupComponent } from './components/popup/PopupComponent';
 import { AuthService } from '../../../../config/auth.service';
 import { LoginComponent } from '../../../login/login.component';
+import { ProjectConstants } from 'src/app/config/project-constants';
 
 @Component({
   selector: 'app-pricing-section',
@@ -27,7 +28,7 @@ export class PricingSectionComponent {
       id: 1,
       name: 'Starter',
       description: 'Perfect for small businesses or personal projects',
-      price: '$799',
+      price: ProjectConstants.PRICE.PRICE1,
       icon: 'check_circle',
       features: [
         '5-page responsive website',
@@ -41,7 +42,7 @@ export class PricingSectionComponent {
       id: 2,
       name: 'Professional',
       description: 'Ideal for growing businesses with dynamic content needs',
-      price: '$1,499',
+      price: ProjectConstants.PRICE.PRICE2,
       icon: 'code',
       features: [
         '10-page responsive website',
@@ -58,7 +59,7 @@ export class PricingSectionComponent {
       id: 3,
       name: 'E-commerce',
       description: 'Full-featured online store for serious sellers',
-      price: '$2,999',
+      price: ProjectConstants.PRICE.PRICE3,
       icon: 'shopping_cart',
       features: [
         'Fully responsive e-commerce website',

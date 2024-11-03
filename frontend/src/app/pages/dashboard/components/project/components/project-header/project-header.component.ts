@@ -5,7 +5,7 @@ import { ProjectStatusService } from '../project-status/project-status.service';
 import { ProjectStatusSelectorComponent } from '../project-status/project-status-selector.component';
 import { PaymentComponent } from '../payment/payment.component';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { ProjectConstants } from '../../project-constants';
+import { ProjectConstants } from '../../../../../../config/project-constants';
 import { ProjectFileComponent } from './project-file/project-file.component';
 import { MatIcon } from '@angular/material/icon';
 

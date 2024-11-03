@@ -19,7 +19,10 @@
         
       <div class="header-right">
         <div class="project-payment" *ngIf="project?.status === 'Approved'">
-          <app-payment [projectId]="project?._id"></app-payment>
+          <app-payment 
+          [projectId]="project?._id"
+          [project]="project"
+          ></app-payment>
         </div>
         
         <ng-container *ngIf="isAdmin; else regularUserStatus">

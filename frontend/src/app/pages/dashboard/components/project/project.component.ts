@@ -16,7 +16,7 @@ import { ProjectService } from './project.service';
 import { AuthService } from '../../../../config/auth.service';
 import { PaymentComponent } from './components/payment/payment.component';
 import { ProjectHeaderComponent } from './components/project-header/project-header.component';
-import { ProjectConstants, isAdmin } from './project-constants';
+import { ProjectConstants, isAdmin } from '../../../../config/project-constants';
 
 @Component({
   selector: 'app-project',
