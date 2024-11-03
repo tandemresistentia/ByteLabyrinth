@@ -1,8 +1,7 @@
 <mat-toolbar class="app-header" [class.header-hidden]="!isHeaderVisible">
   <div class="header-content">
     <a routerLink="/" class="header-title">
-      <img src="assets/images/logo.png" alt="ByteLabyrinth Logo" class="header-logo">
-      ByteLabyrinth
+      <span>Byte</span>Labyrinth
     </a>
     <ng-container *ngIf="isLoggedIn">
       <a mat-button routerLink="/dashboard" class="dashboard-link">

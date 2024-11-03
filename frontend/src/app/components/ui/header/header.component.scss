@@ -22,18 +22,26 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+
 }
+
+/* Option 1: Modern Tech with Clash Display */
+@import url('https://api.fontshare.com/v2/css?f[]=clash-display@600&display=swap');
 
 .header-title {
   display: flex;
   align-items: center;
   text-decoration: none;
-  color: mat.get-color-from-palette(mat.define-palette(mat.$grey-palette), 900);
-  font-weight: 700;
-  font-size: 1.2rem;
+  gap: 1px;
+  font-family: 'Clash Display', sans-serif;
+  font-size: 26px;
+  font-weight: 600;
+  color: #ffa62a;
+  transition: all 0.3s ease;
+  letter-spacing: -0.5px;
 
-  mat-icon {
-    margin-right: 8px;
+  span {
+    color: #2d3748;
   }
 }
 
