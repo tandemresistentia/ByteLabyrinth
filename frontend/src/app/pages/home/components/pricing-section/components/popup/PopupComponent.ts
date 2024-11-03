@@ -85,17 +85,18 @@ export class ProjectSpecificationPopupComponent implements OnInit {
               userEmail: userEmail,
               adminEmail: 'luismvg41@gmail.com'
             };
-
             this.emailService.sendProjectNotifications(emailData).subscribe(
               (emailError) => {
                 console.error('Error sending email notifications:', emailError);
               }
             );
-            
             this.snackBar.open('Project created successfully', 'Close', { duration: 3000 });
             this.submitForm.emit(response);
             this.close();
-
+            this.router.navigate(['/dashboard'])
+            .then(() => {
+              window.location.reload();
+            });
 
           },
           (error: HttpErrorResponse) => {
