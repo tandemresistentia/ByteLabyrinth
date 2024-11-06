@@ -2,6 +2,8 @@
 
 ByteLabyrinth is a comprehensive web application built using the MEAN stack (MongoDB, Express.js, Angular, Node.js) for a web development company. This project showcases our expertise in full-stack JavaScript development and provides a robust foundation for scalable web applications.
 
+WATCH LIVE : https://www.bytelabyrinth.com/
+
 ## Features
 
 - **MongoDB Database**: Efficient and scalable NoSQL database for storing project data
