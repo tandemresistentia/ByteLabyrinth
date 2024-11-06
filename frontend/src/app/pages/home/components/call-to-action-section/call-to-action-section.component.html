@@ -7,7 +7,7 @@
       <p class="subtitle">Let's create something extraordinary together. Start your journey now!</p>
     </div>
     <div class="button-container" [@fadeInUp]>
-      <a mat-raised-button color="accent" routerLink="/contact" class="cta-button" (mousemove)="onButtonMouseMove($event)">
+      <a mat-raised-button color="accent" (click)="scrollToServices()" class="cta-button" (mousemove)="onButtonMouseMove($event)">
         Get Started
         <mat-icon>arrow_forward</mat-icon>
       </a>

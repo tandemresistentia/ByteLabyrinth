@@ -50,4 +50,18 @@ export class CallToActionSectionComponent implements OnInit {
     button.style.setProperty('--x', `${x}px`);
     button.style.setProperty('--y', `${y}px`);
   }
+
+  scrollToServices() {
+    const element = document.getElementById('pricing-plans');
+    if (element) {
+      const headerOffset = 60; // Adjust this value based on your header's height
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+  }
 }
