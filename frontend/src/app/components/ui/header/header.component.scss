@@ -1,5 +1,15 @@
+// header.component.scss
 @use '@angular/material' as mat;
 
+// Variables
+$breakpoint-mobile: 1098px;
+$header-height-desktop: 64px;
+$header-height-mobile: 56px;
+$mobile-menu-bg: #F5EBE0;
+$primary-color: #ffa62a;
+$text-dark: #2d3748;
+
+// Header Base Styles
 .app-header {
   width: 100%;
   position: fixed;
@@ -7,27 +17,60 @@
   left: 0;
   right: 0;
   z-index: 1000;
-  background-color: #F5EBE0;
+  background-color: $mobile-menu-bg;
   transition: transform 0.3s ease-in-out, box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  height: $header-height-desktop;
+  padding: 0;
+
+  @media (max-width: $breakpoint-mobile) {
+    height: $header-height-mobile;
+  }
 
   &.header-hidden {
     transform: translateY(-100%);
   }
 }
 
+// Header Content
 .header-content {
   width: 70%;
   margin: 0 auto;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  padding: 0 16px;
 
+  @media (max-width: $breakpoint-mobile) {
+    width: 100%;
+    padding: 0 8px;
+    justify-content: space-between;
+  }
 }
 
-/* Option 1: Modern Tech with Clash Display */
-@import url('https://api.fontshare.com/v2/css?f[]=clash-display@600&display=swap');
+// Left Section (Logo + Mobile Menu)
+.left-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 
+// Mobile Menu Button
+.mobile-menu-button {
+  display: none;
+  
+  @media (max-width: $breakpoint-mobile) {
+    display: flex;
+    margin-right: 4px;
+    
+    .mat-icon {
+      color: $text-dark;
+    }
+  }
+}
+
+// Logo/Brand
 .header-title {
   display: flex;
   align-items: center;
@@ -36,59 +79,129 @@
   font-family: 'Clash Display', sans-serif;
   font-size: 26px;
   font-weight: 600;
-  color: #ffa62a;
+  color: $primary-color;
   transition: all 0.3s ease;
   letter-spacing: -0.5px;
+  white-space: nowrap;
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 20px;
+  }
 
   span {
-    color: #2d3748;
+    color: $text-dark;
   }
 }
 
+// Desktop Navigation
+.desktop-menu {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 32px;
+
+  @media (max-width: $breakpoint-mobile) {
+    display: none;
+  }
+
+  button {
+    text-transform: none;
+    color: $text-dark;
+    padding: 0 16px;
+  }
+}
+
+// Mobile Navigation Menu
+.mobile-menu {
+  position: absolute;
+  top: $header-height-mobile;
+  left: 0;
+  right: 0;
+  background-color: $mobile-menu-bg;
+  transform: translateY(-100%);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: -1;
+
+  &.open {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+  }
+
+  nav {
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    button, a {
+      width: 100%;
+      justify-content: flex-start;
+      padding: 12px 16px;
+      border-radius: 4px;
+      text-align: left;
+      color: $text-dark;
+
+      mat-icon {
+        margin-right: 12px;
+        color: $primary-color;
+      }
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.04);
+      }
+    }
+  }
+}
+
+// Auth Button
+.auth-button {
+  margin-left: 16px;
+  border-radius: 25px;
+  padding: 0 24px;
+
+  @media (max-width: $breakpoint-mobile) {
+    margin-left: 8px;
+    padding: 0 16px;
+  }
+}
+
+// Logout Button
+.logout-button {
+  background: transparent;
+  border: 1px solid $primary-color;
+  color: $primary-color;
+
+  &:hover {
+    background: rgba($primary-color, 0.04);
+  }
+}
+
+// Dashboard Link
+.dashboard-link {
+  @media (max-width: $breakpoint-mobile) {
+    .dashboard-text {
+      display: none;
+    }
+  }
+}
+
+// Mobile Dashboard Link
+.mobile-dashboard-link {
+  color: $primary-color !important;
+  
+  mat-icon {
+    color: $primary-color;
+  }
+}
+
+// Utility
 .spacer {
   flex: 1 1 auto;
 }
 
-button {
-  text-transform: none;
-  color: mat.get-color-from-palette(mat.define-palette(mat.$grey-palette), 900);
-}
-
-a[mat-raised-button] {
-  margin-left: 16px;
-  border-radius: 25px;
-  padding: 0 24px;
-}
-
-:host ::ng-deep .mat-mdc-tab-label-container {
-  margin-top: 25px;
-}
-
-.dashboard-link{
-  margin-left: 25px;
-}
-
-.logout-button {
-  background: transparent;
-  padding: 6px 12px;
-  border-radius: 6px;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: #f8fafc; // Very light background on hover
-    color: #334155; // Darker text on hover
-    border-color: #cbd5e1;
-  }
-
-  &:active {
-    background: #f1f5f9;
-    transform: translateY(1px);
-  }
-}
-
-.header-logo {
-  height: 34px;
-  width: auto;
-  margin-right: 8px;
-  border-radius: 10px;
-}
+// Font Import
+@import url('https://api.fontshare.com/v2/css?f[]=clash-display@600&display=swap');

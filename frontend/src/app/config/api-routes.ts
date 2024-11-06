@@ -1,4 +1,4 @@
-const isProd = true; // Toggle this to switch environments
+const isProd = false; // Toggle this to switch environments
 
 const BACKEND_URL = isProd 
   ? 'https://modest-intuition-production.up.railway.app'

@@ -24,7 +24,11 @@
     margin-bottom: 40px;
     color: #666;
   }
-  
+  @media (max-width: 850px) {
+    .pricing-grid {
+      flex-direction: column;
+    }
+  }
   .pricing-grid {
     display: flex;
     justify-content: center;

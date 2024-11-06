@@ -101,7 +101,7 @@
   position: relative;
   z-index: 1;
 
-  @media (max-width: 768px) {
+  @media (max-width: 1098px) {
     width: 80%;
   }
 }
@@ -112,7 +112,7 @@
   line-height: 1.2;
   color: mat.get-color-from-palette(mat.$grey-palette, 900);
 
-  @media (max-width: 768px) {
+  @media (max-width: 1098px) {
     font-size: 2.5rem;
   }
 }
@@ -222,15 +222,6 @@
   gap: 20px;
   z-index: 2;
 
-  @media (max-width: 1200px) {
-    position: relative;
-    right: auto;
-    top: auto;
-    transform: none;
-    flex-direction: row;
-    justify-content: center;
-    margin-top: 40px;
-  }
 }
 
 .stat-card {
@@ -445,10 +436,9 @@
 }
 
 // Responsive adjustments
-@media (max-width: 768px) {
+@media (max-width: 1100px) {
   .stats-cards {
-    flex-wrap: wrap;
-    gap: 10px;
+    display: none;
   }
 
   .features-grid {

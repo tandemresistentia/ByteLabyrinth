@@ -23,7 +23,20 @@
   align-items: center;
   gap: 1rem;
 }
-
+@media (max-width:730px) {
+  .header-content {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+  .card-title-section{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+}
 .header-left {
   h2 {
     margin: 0;
