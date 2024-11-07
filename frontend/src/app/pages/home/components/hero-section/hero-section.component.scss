@@ -53,12 +53,15 @@
   width: 96px;
   height: 96px;
   border-radius: 50%;
-  background-color: #FFD580;
-  opacity: 0.1;
+  background-color: #ffa62a;
+  opacity: 0.25; // Increased from 0.1 to 0.25
+  border: 2px solid rgba(255, 166, 42, 0.3); // Added border for better visibility
+  backdrop-filter: blur(4px); // Adds a subtle blur effect
+  box-shadow: 0 0 20px rgba(255, 166, 42, 0.2); // Adds a subtle glow
 
   @for $i from 1 through 5 {
     &:nth-child(#{$i}) {
-      animation: float-#{$i} #{10 + $i}s infinite ease-in-out;
+      animation: float-#{$i} #{1 + $i}s infinite ease-in-out;
     }
   }
 }

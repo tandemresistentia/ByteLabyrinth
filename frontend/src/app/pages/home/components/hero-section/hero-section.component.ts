@@ -15,31 +15,6 @@ import { trigger, transition, style, animate, state } from '@angular/animations'
         <div class="pattern-circles"></div>
       </div>
 
-      <!-- Floating elements -->
-      <div class="floating-elements">
-        <div *ngFor="let item of [1,2,3,4,5]" 
-             class="floating-circle"
-             [style.left.%]="randomPosition()"
-             [style.top.%]="randomPosition()"
-             [style.animation-delay.s]="item * 0.5">
-        </div>
-        
-        <!-- Additional geometric shapes -->
-        <div *ngFor="let item of [1,2,3,4]" 
-             class="floating-square"
-             [style.left.%]="randomPosition()"
-             [style.top.%]="randomPosition()"
-             [style.animation-delay.s]="item * 0.3">
-        </div>
-        
-        <div *ngFor="let item of [1,2,3]" 
-             class="floating-triangle"
-             [style.left.%]="randomPosition()"
-             [style.top.%]="randomPosition()"
-             [style.animation-delay.s]="item * 0.4">
-        </div>
-      </div>
-
       <!-- Side decorations -->
       <div class="side-decoration left"></div>
       <div class="side-decoration right"></div>
